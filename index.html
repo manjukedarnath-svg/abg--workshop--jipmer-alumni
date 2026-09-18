@@ -440,6 +440,7 @@ box-shadow:0 8px 30px rgba(15,30,40,.1)}
       </div>
 
       <div class="mod-panel" id="panel-cases">
+        <div id="facultyAllocationBlock"></div>
         <p style="color:var(--grey-t);font-size:13.5px;margin:0 0 16px">
           Tap any case to expand the full walkthrough: vignette, gas, interpretation, SID analysis, case-specific Q&amp;A, post-intervention gas, pitfalls, and take-home.
         </p>
@@ -1294,6 +1295,7 @@ function initModerator(mode){
   // Build QR and case walkthroughs
   buildQRCode();
   buildCaseWalkthroughs();
+  renderFacultyBlock();
 }
 
 
@@ -1330,6 +1332,32 @@ function setParticipantUrl(url){
   localStorage.setItem("abg:baseUrl", url);
   var el = document.getElementById("baseUrl");
   if (el) el.value = url;
+}
+
+
+/* ===== FACULTY ALLOCATION ===== */
+var FACULTY_ALLOCATION = [
+  {group:"1", name:"Manju Kedarnath"},
+  {group:"2", name:"Shilpa"},
+  {group:"3", name:"Namitha"},
+  {group:"4", name:"Sivamurukan"},
+  {group:"5", name:"Nikhil"},
+  {group:"6", name:"Rohit"},
+  {group:"7", name:"Balachandar"},
+  {group:"8", name:"Dipu / Sreedeep"}
+];
+
+function renderFacultyBlock(){
+  var host = document.getElementById("facultyAllocationBlock");
+  if (!host) return;
+  var html = '<div class="cheat-section" style="margin-bottom:24px">';
+  html += '<h3>Faculty allocation by group</h3>';
+  html += '<table><thead><tr><th style="width:22%">Group</th><th>Faculty facilitator</th></tr></thead><tbody>';
+  FACULTY_ALLOCATION.forEach(function(f){
+    html += '<tr><td>Group ' + f.group + '</td><td>' + f.name + '</td></tr>';
+  });
+  html += '</tbody></table></div>';
+  host.innerHTML = html;
 }
 
 function buildQRCode(){
