@@ -1,0 +1,1553 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ABG Interpretation Workshop</title>
+<style>
+:root{--teal:#0F6E6E;--teal-dark:#0A4E4E;--teal-soft:#E6F1F1;--navy:#1B2A3A;
+--gold:#B8892B;--gold-soft:#FBF7EC;--grey-l:#F4F6F8;--grey-m:#E1E6EB;--grey-t:#5A6672;
+--ok:#1F7A4D;--warn:#B23A3A}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+color:var(--navy);background:#FAFBFC;font-size:15px;line-height:1.55}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,textarea{font-family:inherit;font-size:inherit;color:inherit;outline:none}
+a{color:var(--teal);text-decoration:none}
+#landing{min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:24px;
+background:radial-gradient(1200px 600px at 10% -10%,#E6F1F1 0%,transparent 55%),
+radial-gradient(900px 500px at 110% 10%,#FBF7EC 0%,transparent 50%),#FAFBFC}
+.card{width:100%;max-width:520px;background:#fff;border-radius:16px;
+box-shadow:0 8px 30px rgba(15,30,40,.1);padding:36px 34px;border:1px solid var(--grey-m)}
+.kick{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey-t);
+font-weight:600;text-align:center;margin-bottom:6px}
+.card h1{font-size:26px;line-height:1.2;margin:0 0 4px;text-align:center;letter-spacing:-.01em}
+.card .sub{text-align:center;color:var(--grey-t);font-size:13.5px;margin:0 0 22px}
+.rule{height:3px;background:var(--teal);border-radius:2px;margin:0 0 24px}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--teal-dark);
+letter-spacing:.04em;text-transform:uppercase;margin-bottom:6px}
+.field input,.field select{width:100%;padding:11px 13px;border:1px solid var(--grey-m);
+border-radius:7px;background:var(--grey-l);transition:border-color .15s,background .15s}
+.field input:focus{border-color:var(--teal);background:#fff;box-shadow:0 0 0 3px var(--teal-soft)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+padding:11px 18px;border-radius:7px;font-weight:600;font-size:14px;
+background:var(--teal);color:#fff;border:1px solid var(--teal);transition:background .15s}
+.btn:hover{background:var(--teal-dark)}
+.btn.ghost{background:transparent;color:var(--teal);border-color:var(--grey-m)}
+.btn.ghost:hover{background:var(--teal-soft)}
+.btn.gold{background:var(--gold);border-color:var(--gold)}
+.btn.gold:hover{background:#9E7422}
+.btn.block{width:100%}
+.btn.sm{padding:7px 12px;font-size:13px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.grid4 button{padding:10px 0;border-radius:7px;border:1px solid var(--grey-m);
+background:var(--grey-l);font-weight:600;transition:all .15s}
+.grid4 button:hover{border-color:var(--teal)}
+.grid4 button.active{background:var(--teal);color:#fff;border-color:var(--teal)}
+#app{display:none;min-height:100dvh;flex-direction:column}
+#app.on{display:flex}
+.menu-fab{width:38px;height:38px;border-radius:10px;background:var(--grey-l);border:1px solid var(--grey-m);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.menu-fab span,.menu-fab span::before,.menu-fab span::after{content:'';display:block;width:16px;height:2px;background:var(--navy);border-radius:2px;position:relative;transition:transform .2s}
+.menu-fab span::before{position:absolute;top:-5px}
+.menu-fab span::after{position:absolute;top:5px}
+.topbar{position:sticky;top:0;z-index:40;background:#fff;border-bottom:1px solid var(--grey-m);
+display:flex;align-items:center;gap:14px;padding:calc(10px + env(safe-area-inset-top)) 18px 10px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px}
+.brand .dot{width:9px;height:9px;border-radius:50%;background:var(--teal)}
+.topbar .who{margin-left:auto;display:flex;align-items:center;gap:12px;font-size:12.5px;
+color:var(--grey-t);flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;
+background:var(--teal-soft);color:var(--teal-dark);border-radius:20px;font-weight:600;font-size:11.5px}
+.chip.gold{background:var(--gold-soft);color:var(--gold)}
+.chip.navy{background:#E8ECF1;color:var(--navy)}
+.layout{flex:1;display:grid;grid-template-columns:280px 1fr;max-width:1400px;width:100%;
+margin:0 auto}
+@media(max-width:900px){.layout{grid-template-columns:1fr}}
+.sidebar{border-right:1px solid var(--grey-m);background:#fff;padding:18px 14px;
+position:sticky;top:57px;align-self:start;max-height:calc(100dvh - 57px);overflow-y:auto}
+@media(max-width:900px){.sidebar{position:fixed;inset:57px 0 auto 0;z-index:30;max-height:60dvh;
+transform:translateY(-110%);transition:transform .22s;border-right:none;
+border-bottom:1px solid var(--grey-m)}
+.sidebar.open{transform:translateY(0)}
+.sb-progress{display:flex;align-items:center;gap:8px;margin:0 4px 12px;font-size:11.5px;color:var(--grey-t);font-weight:600}
+.sb-progress .bar{flex:1;height:5px;border-radius:3px;background:var(--grey-m);overflow:hidden}
+.sb-progress .bar i{display:block;height:100%;background:var(--teal);border-radius:3px}}
+.sb-title{font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--grey-t);
+text-transform:uppercase;margin:0 4px 10px}
+.case-list{display:flex;flex-direction:column;gap:3px}
+.case-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:7px;
+cursor:pointer;transition:background .12s;text-align:left;border:1px solid transparent}
+.case-item:hover{background:var(--grey-l)}
+.case-item.active{background:var(--teal-soft);border-color:var(--teal-soft)}
+.case-item .num{min-width:26px;height:26px;border-radius:50%;display:flex;align-items:center;
+justify-content:center;font-weight:700;font-size:12px;background:var(--grey-l);
+color:var(--grey-t);flex-shrink:0}
+.case-item.unlocked .num,.case-item.active .num{background:var(--teal);color:#fff}
+.case-item .meta{flex:1;min-width:0}
+.case-item .t{font-weight:600;font-size:13.5px;display:block;
+overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.case-item .s{font-size:11px;color:var(--grey-t);margin-top:1px;display:block}
+.case-item .badge{width:7px;height:7px;border-radius:50%;background:var(--grey-m);flex-shrink:0}
+.case-item.unlocked .badge{background:var(--ok)}
+.main{padding:22px 28px 80px;max-width:820px}
+@media(max-width:900px){.main{padding:18px 16px 60px}}
+.case-head{margin-bottom:20px}
+.case-head .eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--teal);
+text-transform:uppercase;margin-bottom:6px}
+.case-head h1{font-size:26px;line-height:1.2;margin:0 0 12px;letter-spacing:-.015em}
+.vignette{background:var(--grey-l);border-left:3px solid var(--teal);padding:14px 16px;
+border-radius:0 7px 7px 0;font-size:14.5px}
+.section{margin-top:28px}
+.section-head{display:flex;align-items:baseline;gap:10px;margin-bottom:12px;
+padding-bottom:6px;border-bottom:2px solid var(--teal)}
+.section-head h2{font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+color:var(--teal-dark);margin:0}
+.section-head .tag{font-size:11px;color:var(--grey-t);margin-left:auto;font-weight:500}
+.section-head.gold{border-color:var(--gold)}
+.section-head.gold h2{color:var(--gold)}
+.gas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:8px}
+.gas-card{background:var(--grey-l);border:1px solid var(--grey-m);border-radius:7px;
+padding:8px 6px 9px;text-align:center}
+.gas-card .l{font-size:10.5px;color:var(--grey-t);font-weight:600;letter-spacing:.03em;
+text-transform:uppercase}
+.gas-card .v{font-size:18px;font-weight:700;margin-top:2px;letter-spacing:-.02em;
+font-variant-numeric:tabular-nums}
+.steps{display:flex;flex-direction:column;gap:10px}
+.step{display:grid;grid-template-columns:170px 1fr;gap:12px;align-items:start;
+background:#fff;border:1px solid var(--grey-m);border-radius:7px;padding:12px 14px}
+@media(max-width:640px){.step{grid-template-columns:1fr}}
+.step .lbl{font-size:12.5px;font-weight:700;color:var(--teal-dark);line-height:1.4;padding-top:2px}
+.step textarea{width:100%;min-height:52px;padding:9px 11px;border:1px solid var(--grey-m);
+border-radius:6px;background:var(--grey-l);resize:vertical;font-size:14px;
+transition:border-color .15s,background .15s}
+.step textarea:focus{border-color:var(--teal);background:#fff;box-shadow:0 0 0 3px var(--teal-soft)}
+.sid-table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--grey-m);
+border-radius:7px;overflow:hidden;font-size:13.5px;background:#fff}
+.sid-table th{background:var(--teal-dark);color:#fff;text-align:left;font-size:11px;
+letter-spacing:.08em;text-transform:uppercase;padding:8px 12px;font-weight:600}
+.sid-table td{padding:10px 12px;border-top:1px solid var(--grey-m);vertical-align:top}
+.sid-table tr:nth-child(even) td{background:#FBFCFD}
+.sid-table td:first-child{font-weight:700;color:var(--teal-dark);width:150px}
+.sid-table td:nth-child(2){width:150px;font-size:12.5px;color:var(--navy)}
+.sid-table textarea{width:100%;padding:6px 8px;border:1px solid var(--grey-m);border-radius:5px;
+background:var(--grey-l);font-size:13px;resize:vertical;min-height:38px}
+.sid-table textarea:focus{border-color:var(--teal);background:#fff}
+.qa{margin-bottom:16px}
+.qa .q{font-size:14px;font-weight:600;margin-bottom:6px;display:flex;gap:8px}
+.qa .q .n{color:var(--teal);font-weight:700;flex-shrink:0}
+.qa textarea{width:100%;min-height:60px;padding:10px 12px;border:1px solid var(--grey-m);
+border-radius:7px;background:var(--grey-l);resize:vertical;font-size:14px;
+transition:border-color .15s,background .15s}
+.qa textarea:focus{border-color:var(--teal);background:#fff;box-shadow:0 0 0 3px var(--teal-soft)}
+.autosave{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;color:var(--grey-t)}
+.autosave .dot{width:6px;height:6px;border-radius:50%;background:var(--ok);transition:opacity .3s}
+.autosave.saving .dot{background:var(--gold)}
+.unlock-bar{margin-top:32px;background:#fff;border:1px solid var(--grey-m);border-radius:12px;
+padding:20px 22px;box-shadow:0 1px 3px rgba(15,30,40,.06)}
+.unlock-bar h3{margin:0 0 8px;font-size:14px;display:flex;align-items:center;gap:8px}
+.unlock-bar h3 .lockicon{width:26px;height:26px;border-radius:6px;background:var(--gold-soft);
+display:flex;align-items:center;justify-content:center;color:var(--gold)}
+.unlock-bar p{margin:0 0 12px;font-size:13px;color:var(--grey-t)}
+.unlock-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.unlock-row input{width:120px;padding:11px 14px;border:1px solid var(--grey-m);border-radius:8px;
+background:#fff;font-size:18px;font-weight:700;letter-spacing:.25em;text-align:center;
+text-transform:uppercase}
+.unlock-row input:focus{border-color:var(--teal);box-shadow:0 0 0 3px var(--teal-soft)}
+.unlock-err{color:var(--warn);font-size:13px;font-weight:600}
+.answer-panel{margin-top:34px;border-top:2px dashed var(--gold);padding-top:24px}
+.answer-banner{display:flex;align-items:center;gap:12px;background:var(--gold-soft);
+border-left:4px solid var(--gold);border-radius:0 10px 10px 0;padding:12px 16px;margin-bottom:18px}
+.answer-banner .icon{width:32px;height:32px;border-radius:50%;background:var(--gold);
+color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
+.answer-banner h3{margin:0;font-size:14.5px}
+.answer-banner p{margin:2px 0 0;font-size:12.5px;color:var(--grey-t)}
+.model-answer{background:#FBFCFD;border:1px solid var(--grey-m);border-radius:8px;
+padding:11px 14px;font-size:14px;line-height:1.55}
+.callout{background:var(--gold-soft);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;
+padding:12px 16px;margin-top:12px}
+.callout .lbl{font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--gold);
+text-transform:uppercase;margin-bottom:4px}
+.callout .txt{font-size:14px;line-height:1.55}
+.pitfall{display:flex;gap:8px;font-size:13.5px;padding:6px 0;line-height:1.5}
+.pitfall .bullet{color:var(--warn);font-weight:700;flex-shrink:0}
+.post-card{margin-top:14px;background:#FFFDF7;border:1px solid #EFE3C8;border-radius:10px;
+padding:16px 18px}
+.post-card .ph{font-size:11.5px;font-weight:700;letter-spacing:.1em;color:var(--gold);
+text-transform:uppercase;margin-bottom:10px}
+.post-card .intervention{font-size:13.5px;color:var(--grey-t);font-style:italic;margin-bottom:10px}
+#moderator{display:none;min-height:100dvh;padding:24px}
+#moderator.on{display:block}
+.mod-wrap{max-width:1000px;margin:0 auto}
+.mod-card{background:#fff;border:1px solid var(--grey-m);border-radius:14px;padding:24px;
+box-shadow:0 1px 3px rgba(15,30,40,.06);margin-bottom:16px}
+.code-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-top:14px}
+.code-card{border:1px solid var(--grey-m);border-radius:10px;padding:12px;background:var(--grey-l);
+cursor:pointer;text-align:left;transition:all .15s}
+.code-card:hover{border-color:var(--teal);background:#fff}
+.code-card.active{border-color:var(--teal);background:var(--teal-soft)}
+.code-card .cid{font-size:11px;font-weight:700;color:var(--grey-t);letter-spacing:.08em;
+text-transform:uppercase}
+.code-card .ct{font-size:13px;font-weight:600;margin:2px 0 8px;line-height:1.25}
+.code-card .cc{font-size:24px;font-weight:800;letter-spacing:.15em;color:var(--teal);
+text-align:center;padding:6px 0;background:#fff;border-radius:6px;border:1px dashed var(--grey-m);
+font-variant-numeric:tabular-nums}
+.big-code{font-size:64px;font-weight:800;letter-spacing:.2em;color:var(--teal);text-align:center;
+padding:30px 0;background:var(--grey-l);border-radius:14px;border:1px dashed var(--grey-m);
+margin:14px 0;font-variant-numeric:tabular-nums}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);
+background:var(--navy);color:#fff;padding:11px 20px;border-radius:22px;font-size:13.5px;
+font-weight:600;opacity:0;pointer-events:none;transition:all .22s;z-index:100;
+box-shadow:0 8px 30px rgba(15,30,40,.1)}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ===== MOBILE-FIRST PATCH ===== */
+@media(max-width:640px){
+  body{font-size:15px}
+  html{-webkit-tap-highlight-color:transparent}
+  .card{padding:24px 20px;border-radius:14px}
+  .card h1{font-size:22px}
+  .kick{font-size:10px}
+  .topbar{padding:8px 12px;gap:8px}
+  .brand{font-size:13px}
+  .topbar .who{gap:6px;font-size:11.5px}
+  .topbar .who .chip{padding:3px 8px;font-size:10.5px}
+  .autosave{font-size:10.5px}
+  .main{padding:16px 14px calc(90px + env(safe-area-inset-bottom));max-width:100%}
+  .case-head h1{font-size:21px;letter-spacing:-.02em}
+  .case-head .eyebrow{font-size:10px}
+  .vignette{font-size:14px;padding:12px 14px;line-height:1.5}
+  .section{margin-top:22px}
+  .section-head{padding-bottom:5px;margin-bottom:10px}
+  .section-head h2{font-size:12px;letter-spacing:.06em}
+  .section-head .tag{font-size:10px}
+  .gas-grid{grid-template-columns:repeat(3,1fr);gap:8px}
+  .gas-card{padding:10px 4px 11px;border-radius:9px;min-height:56px;display:flex;flex-direction:column;justify-content:center}
+  .gas-card .l{font-size:9.5px;letter-spacing:0;line-height:1.15}
+  .gas-card .v{font-size:18px;margin-top:3px}
+  .steps{gap:10px}
+  .step{grid-template-columns:1fr;gap:6px;padding:11px 12px;border-radius:7px}
+  .step .lbl{font-size:12.5px;padding-top:0;line-height:1.35}
+  .step textarea{font-size:16px;min-height:64px;padding:11px 12px;border-radius:7px;line-height:1.45}
+  .model-answer{font-size:14px;padding:11px 12px;line-height:1.55}
+  .sid-table{font-size:13px;border-radius:7px}
+  .sid-table th{padding:8px 8px;font-size:10px;letter-spacing:.03em}
+  .sid-table td{padding:9px 8px;font-size:13px}
+  .sid-table td:first-child{width:auto;font-size:12.5px;display:table-cell}
+  .sid-table td:nth-child(2){width:auto;font-size:12.5px;display:table-cell}
+  .sid-table textarea{font-size:15px;padding:9px 10px;min-height:44px}
+  .qa{margin-bottom:14px}
+  .qa .q{font-size:14px;line-height:1.45}
+  .qa .q .n{font-size:14px}
+  .qa textarea{font-size:16px;min-height:80px;padding:12px;border-radius:7px;line-height:1.45}
+  .unlock-bar{padding:16px 14px;border-radius:10px;margin-top:24px}
+  .unlock-bar h3{font-size:14px}
+  .unlock-bar p{font-size:12.5px}
+  .unlock-row{flex-direction:column;align-items:stretch;gap:8px}
+  .unlock-row input{width:100%;font-size:24px;letter-spacing:.3em;padding:14px;border-radius:9px}
+  .unlock-row .btn{width:100%;padding:13px;font-size:15px}
+  .btn{padding:12px 16px;font-size:15px;border-radius:8px}
+  .btn.sm{padding:9px 12px;font-size:13.5px}
+  .answer-banner{padding:12px 14px;border-radius:0 9px 9px 0}
+  .answer-banner .icon{width:30px;height:30px;font-size:12px}
+  .answer-banner h3{font-size:14px}
+  .answer-banner p{font-size:12px}
+  .callout{padding:12px 14px;border-radius:0 7px 7px 0}
+  .callout .lbl{font-size:10px}
+  .callout .txt{font-size:14px;line-height:1.5}
+  .pitfall{font-size:13.5px;padding:5px 0}
+  .post-card{padding:14px 14px;border-radius:9px}
+  .post-card .ph{font-size:10.5px}
+  .post-card .intervention{font-size:13px}
+  .mod-card{padding:18px 16px;border-radius:12px}
+  #moderator{padding:14px 10px calc(24px + env(safe-area-inset-bottom))}
+  .faculty-banner{padding:11px 13px;font-size:12.5px;line-height:1.5}
+  .mod-tabs{padding:3px;border-radius:9px;gap:3px}
+  .mod-tab{padding:9px 12px;font-size:13px}
+  .big-code{font-size:48px;padding:20px 0;letter-spacing:.18em;border-radius:12px}
+  .code-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+  .code-card{padding:10px}
+  .code-card .cc{font-size:22px;padding:5px 0;letter-spacing:.15em}
+  .qr-block{flex-direction:column;text-align:center;padding:16px}
+  .qr-block img{width:200px;height:200px}
+  .walkthrough-case .wt-head{padding:12px 14px;gap:10px}
+  .walkthrough-case .wt-head .wt-num{width:28px;height:28px;font-size:12px}
+  .walkthrough-case .wt-head .wt-title{font-size:13.5px}
+  .walkthrough-case .wt-body{padding:14px}
+  .cheat-section h3{font-size:14px}
+  .cheat-section table{font-size:12.5px;border-radius:7px}
+  .cheat-section th{padding:8px;font-size:10px;letter-spacing:.03em}
+  .cheat-section td{padding:8px;font-size:12.5px}
+}
+@media(max-width:900px){
+  .sidebar{
+    position:fixed;left:0;right:0;bottom:0;top:auto;max-height:78dvh;
+    transform:translateY(100%);border-radius:16px 16px 0 0;
+    box-shadow:0 -8px 30px rgba(15,30,40,.15);border-right:none;
+    border-top:1px solid var(--grey-m);
+    padding:14px 14px 36px;transition:transform .25s cubic-bezier(.2,.9,.3,1);
+    z-index:50;
+  }
+  .sidebar.open{transform:translateY(0)}
+  .sidebar::before{
+    content:'';display:block;width:40px;height:4px;border-radius:2px;
+    background:var(--grey-m);margin:0 auto 12px;
+  }
+  .case-item{padding:13px 12px;border-radius:9px;min-height:44px}
+  .case-item .num{min-width:28px;height:28px;font-size:12.5px}
+  .case-item .t{font-size:14px}
+  .case-item .s{font-size:11.5px}
+}
+.mod-tabs{display:flex;gap:4px;background:var(--grey-l);padding:4px;border-radius:10px;margin-bottom:20px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.mod-tab{flex:1;min-width:max-content;padding:10px 16px;border-radius:7px;font-weight:600;font-size:13.5px;color:var(--grey-t);transition:all .15s;white-space:nowrap}
+.mod-tab.active{background:#fff;color:var(--teal-dark);box-shadow:0 1px 3px rgba(15,30,40,.08)}
+.mod-panel{display:none}
+.mod-panel.active{display:block}
+.qr-block{display:flex;gap:20px;align-items:center;flex-wrap:wrap;padding:18px;background:var(--grey-l);border-radius:12px;border:1px solid var(--grey-m);margin-top:16px}
+.qr-block img{width:200px;height:200px;background:#fff;border-radius:8px;padding:8px;border:1px solid var(--grey-m)}
+.qr-block .qr-info{flex:1;min-width:200px}
+.qr-block .qr-info .url{font-family:ui-monospace,Menlo,monospace;font-size:13px;background:#fff;padding:10px 12px;border-radius:8px;border:1px solid var(--grey-m);word-break:break-all;margin-top:6px}
+.walkthrough-case{border:1px solid var(--grey-m);border-radius:12px;margin-bottom:14px;overflow:hidden;background:#fff}
+.walkthrough-case .wt-head{padding:14px 18px;background:var(--grey-l);cursor:pointer;display:flex;align-items:center;gap:12px;border:none;width:100%;text-align:left;font-family:inherit}
+.walkthrough-case .wt-head .wt-num{width:32px;height:32px;border-radius:50%;background:var(--teal);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;font-size:13px}
+.walkthrough-case .wt-head .wt-title{flex:1;font-weight:600;font-size:14.5px;color:var(--navy)}
+.walkthrough-case .wt-head .wt-arrow{color:var(--grey-t);transition:transform .2s;font-size:12px}
+.walkthrough-case.open .wt-head .wt-arrow{transform:rotate(90deg)}
+.walkthrough-case .wt-body{display:none;padding:18px;border-top:1px solid var(--grey-m)}
+.walkthrough-case.open .wt-body{display:block}
+.cheat-section{margin-bottom:24px}
+.cheat-section h3{font-size:15px;color:var(--teal-dark);margin:0 0 10px;font-weight:700}
+.cheat-section table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--grey-m);border-radius:8px;overflow:hidden;font-size:13.5px}
+.cheat-section th{background:var(--teal-dark);color:#fff;text-align:left;padding:9px 12px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:600}
+.cheat-section td{padding:10px 12px;border-top:1px solid var(--grey-m);vertical-align:top;color:var(--navy)}
+.cheat-section tr:nth-child(even) td{background:#FBFCFD}
+.cheat-section td:first-child{font-weight:700;color:var(--teal-dark)}
+
+
+.faculty-mode .mod-tab[data-tab="codes"]{display:none}
+.faculty-mode #panel-codes{display:none}
+.faculty-banner{
+  background:var(--gold-soft);border-left:4px solid var(--gold);
+  border-radius:0 10px 10px 0;padding:12px 16px;margin-bottom:18px;
+  font-size:13.5px;color:var(--navy);line-height:1.55;
+}
+.faculty-banner strong{color:var(--gold)}
+
+</style>
+</head>
+<body>
+<div id="landing">
+  <div class="card">
+    <div class="kick">Paediatric Acute Care Teaching</div>
+    <h1>ABG Interpretation Workshop</h1>
+    <p class="sub">Live participant app - 13 cases - interpret, intervene, re-evaluate</p>
+    <div class="rule"></div>
+    <div class="field">
+      <label for="pname">Your name</label>
+      <input id="pname" type="text" placeholder="e.g. Dr. A. Sharma" autocomplete="name">
+    </div>
+    <div class="field">
+      <label>Your group</label>
+      <div class="grid4" id="groupGrid">
+        <button data-g="A">A</button><button data-g="B">B</button>
+        <button data-g="C">C</button><button data-g="D">D</button>
+        <button data-g="E">E</button><button data-g="F">F</button>
+        <button data-g="G">G</button><button data-g="H">H</button>
+      </div>
+    </div>
+    <button class="btn block" id="startBtn" style="margin-top:22px">Start the workshop</button>
+    <p style="text-align:center;color:var(--grey-t);font-size:12px;margin-top:14px">
+      Answers autosave on this device. You can return any time.
+    </p>
+  </div>
+</div>
+<div id="app">
+  <header class="topbar">
+    <button class="menu-fab" id="menuBtn" style="display:none" aria-label="Toggle case menu"><span></span></button>
+    <div class="brand"><span class="dot"></span> ABG Workshop</div>
+    <div class="who">
+      <span class="chip navy" id="chipWho">-</span>
+      <span class="chip" id="chipGroup">Group -</span>
+      <span class="autosave" id="autosave"><span class="dot"></span><span id="autosaveTxt">Ready</span></span>
+    </div>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sb-title">Cases</div>
+      <div class="sb-progress" id="sbProgress" style="display:none"><span id="sbProgressTxt">0 of 13 unlocked</span><span class="bar"><i id="sbProgressBar" style="width:0%"></i></span></div>
+      <div class="case-list" id="caseList"></div>
+    </aside>
+    <main class="main" id="main"></main>
+  </div>
+</div>
+<div id="moderator">
+  <div class="mod-wrap">
+    <div class="mod-card">
+      <div class="kick" style="text-align:left">Moderator & Faculty Console</div>
+      <h1 style="margin:0 0 6px;font-size:22px">ABG Workshop Control</h1>
+      <p style="color:var(--grey-t);font-size:13.5px;margin:0 0 18px">
+        Unlock codes, case walkthroughs, and quick reference - all in one place.
+      </p>
+
+      <div class="faculty-banner" id="facultyBanner" style="display:none"><strong>Faculty view.</strong> 3 min interpret &middot; 3 min discuss &middot; 2 min synthesise. Tap any case below to expand the full walkthrough.</div>
+      <div class="mod-tabs">
+        <button class="mod-tab active" data-tab="codes">Codes &amp; QR</button>
+        <button class="mod-tab" data-tab="cases">Cases &amp; Answers</button>
+        <button class="mod-tab" data-tab="cheat">Cheat Sheet</button>
+      </div>
+
+      <div class="mod-panel active" id="panel-codes">
+        <div class="field" style="margin-bottom:14px">
+          <label for="seed">Session seed</label>
+          <input id="seed" type="text" value="JIPMER-PCCM-26">
+        </div>
+        <div class="field" style="margin-bottom:14px">
+          <label for="baseUrl">Participant base URL <span style="text-transform:none;color:var(--grey-t);font-weight:400">(edit if auto-detect is wrong)</span></label>
+          <input id="baseUrl" type="text" placeholder="http://192.168.1.42:8000/">
+        </div>
+
+        <div class="qr-block">
+          <div id="qrContainer">
+            <img id="qrImg" alt="Participant QR code" src="">
+          </div>
+          <div class="qr-info">
+            <div style="font-weight:700;color:var(--teal-dark);font-size:13px;letter-spacing:.04em;text-transform:uppercase;margin-bottom:4px">Scan to join</div>
+            <p style="color:var(--grey-t);font-size:13px;margin:0 0 8px;line-height:1.5">
+              Participants point their phone camera at this QR code. It opens the participant app directly.
+            </p>
+            <div class="url" id="participantUrl">-</div>
+            <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+              <button class="btn sm" id="copyLink">Copy participant link</button>
+              <button class="btn ghost sm" id="copyFacultyLink">Copy faculty link</button>
+              <button class="btn ghost sm" id="copyModLink">Copy moderator link</button>
+              <button class="btn ghost sm" id="refreshQR">Refresh QR</button>
+            </div>
+            <p style="color:var(--grey-t);font-size:11.5px;margin:8px 0 0">Send the faculty/moderator link once by chat or email — one click opens the right view directly, no code needed.</p>
+          </div>
+        </div>
+
+        <div style="margin-top:24px">
+          <div class="sb-title">Selected case</div>
+          <div class="big-code" id="bigCode">- - - -</div>
+          <div style="text-align:center;color:var(--grey-t);font-size:13px" id="bigCodeLabel">Click a case below</div>
+        </div>
+
+        <div style="margin-top:24px">
+          <div class="sb-title">All unlock codes</div>
+          <div class="code-grid" id="codeGrid"></div>
+        </div>
+      </div>
+
+      <div class="mod-panel" id="panel-cases">
+        <p style="color:var(--grey-t);font-size:13.5px;margin:0 0 16px">
+          Tap any case to expand the full walkthrough: vignette, gas, interpretation, SID analysis, case-specific Q&amp;A, post-intervention gas, pitfalls, and take-home.
+        </p>
+        <div id="caseWalkthroughs"></div>
+      </div>
+
+      <div class="mod-panel" id="panel-cheat">
+        <p style="color:var(--grey-t);font-size:13.5px;margin:0 0 16px">
+          Formulas, normal ranges, and pattern-recognition at a glance.
+        </p>
+
+        <div class="cheat-section">
+          <h3>Core formulas</h3>
+          <table>
+            <thead><tr><th>Tool</th><th>Formula</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td>[H+]</td><td>24 &times; PaCO2 / HCO3</td><td>Should match reported pH (see table below)</td></tr>
+              <tr><td>Anion gap</td><td>Na &minus; (Cl + HCO3)</td><td>Normal 12 &plusmn; 2</td></tr>
+              <tr><td>Albumin-corrected AG</td><td>AG + 2.5 &times; (4.0 &minus; albumin)</td><td>Add 2.5 per 1 g/dL below 4.0</td></tr>
+              <tr><td>Delta ratio</td><td>(AG &minus; 12) / (24 &minus; HCO3)</td><td>&lt;0.4 NAGMA &middot; 0.4-0.8 mixed &middot; 0.8-2 HAGMA &middot; &gt;2 +met alk</td></tr>
+              <tr><td>Winter's (met acidosis)</td><td>PaCO2 = 1.5 &times; HCO3 + 8 &plusmn; 2</td><td>Expected respiratory compensation</td></tr>
+              <tr><td>Met alkalosis comp</td><td>PaCO2 = 0.7 &times; HCO3 + 21 &plusmn; 2</td><td>Or 40 + 0.7 &times; (HCO3 &minus; 24) &plusmn; 5</td></tr>
+              <tr><td>Acute resp alkalosis</td><td>HCO3 falls ~2 per 10 mmHg PaCO2 fall</td><td>Chronic: falls ~4-5 per 10</td></tr>
+              <tr><td>Acute resp acidosis</td><td>HCO3 rises ~1 per 10 mmHg PaCO2 rise</td><td>Chronic: rises ~4 per 10</td></tr>
+              <tr><td>Corrected Na (DKA)</td><td>Na + 1.6 &times; [(glucose &minus; 100)/100]</td><td>True Na if glucose were 100</td></tr>
+              <tr><td>P/F ratio</td><td>PaO2 / FiO2</td><td>&gt;300 normal, &lt;200 severe, &lt;100 critical</td></tr>
+              <tr><td>Oxygenation index</td><td>MAP &times; FiO2 &times; 100 / PaO2</td><td>PALICC severe ARDS: OI &ge; 16</td></tr>
+              <tr><td>CaO2</td><td>1.34 &times; Hb &times; SaO2 + 0.003 &times; PaO2</td><td>Normal ~16-20 mL/dL</td></tr>
+              <tr><td>DO2</td><td>Cardiac output &times; CaO2</td><td>Oxygen delivery</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="cheat-section">
+          <h3>[H+] to pH reference</h3>
+          <table>
+            <thead><tr><th>pH</th><th>[H+]</th><th>pH</th><th>[H+]</th><th>pH</th><th>[H+]</th></tr></thead>
+            <tbody>
+              <tr><td>7.80</td><td>16</td><td>7.40</td><td>40</td><td>7.00</td><td>89</td></tr>
+              <tr><td>7.70</td><td>20</td><td>7.30</td><td>50</td><td>6.90</td><td>112</td></tr>
+              <tr><td>7.60</td><td>25</td><td>7.20</td><td>63</td><td>6.80</td><td>159</td></tr>
+              <tr><td>7.50</td><td>32</td><td>7.10</td><td>79</td><td>6.70</td><td>200</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="cheat-section">
+          <h3>SID / Stewart framework</h3>
+          <table>
+            <thead><tr><th>Force</th><th>Tool</th><th>Direction</th></tr></thead>
+            <tbody>
+              <tr><td>SID</td><td>Na &minus; Cl (normal ~36)</td><td>Low = chloride-driven acidosis. High = chloride-loss alkalosis.</td></tr>
+              <tr><td>Atot</td><td>Albumin + phosphate</td><td>High = acidifying. Low albumin = alkalinising (masks HAGMA).</td></tr>
+              <tr><td>Unmeasured anions</td><td>AG &minus; (lactate + ketones)</td><td>High = organic acids, salicylate, urate, oxalate.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="cheat-section">
+          <h3>Common patterns &mdash; one-line answers</h3>
+          <table>
+            <thead><tr><th>Pattern</th><th>Think</th></tr></thead>
+            <tbody>
+              <tr><td>HAGMA + appropriate comp + glucose 480 + ketones</td><td>DKA (severe if pH &lt;7.1 or HCO3 &lt;5)</td></tr>
+              <tr><td>Met alkalosis + hypochloraemia + hypokalaemia + urine Cl &lt;15</td><td>Pyloric stenosis (chloride-responsive)</td></tr>
+              <tr><td>NAGMA + hyperchloraemia + normal lactate</td><td>GI bicarbonate loss (diarrhoea)</td></tr>
+              <tr><td>Raw AG normal + low albumin + abnormal lactate</td><td>Correct AG for albumin &mdash; unmask HAGMA; suspect IEM if recurrent</td></tr>
+              <tr><td>Near-normal pH + low PaCO2 + low HCO3 + tinnitus</td><td>Salicylate poisoning (mixed disorder)</td></tr>
+              <tr><td>PaCO2 high + HCO3 low simultaneously</td><td>Mixed resp + metabolic acidosis &mdash; never "compensation"</td></tr>
+              <tr><td>Hb &lt;5 + normal SpO2 + low ScvO2 + high lactate</td><td>Oxygen delivery failure &mdash; transfuse</td></tr>
+              <tr><td>High PaO2 + low SpO2 + low SO2 + chocolate-brown blood</td><td>Methaemoglobinaemia &mdash; methylene blue</td></tr>
+              <tr><td>Neonate + resp alkalosis + lethargy + afebrile</td><td>Hyperammonaemia &mdash; ammonia on ice</td></tr>
+              <tr><td>Neonate + HAGMA + ketones + hypoglycaemia</td><td>IEM (organic acidaemia / FAOD) &mdash; critical sample</td></tr>
+              <tr><td>HUS + K 6.8 + iCa 0.92 + phosphate 9.5</td><td>Triple-hit acidosis &mdash; dialysis, treat electrolytes</td></tr>
+              <tr><td>Hep A + encephalopathy + SBE &minus;1 + low albumin</td><td>Masked HAGMA + resp alkalosis &mdash; check glucose</td></tr>
+              <tr><td>Fasting hypoglycaemia + low ketones + high FFA</td><td>FAOD (e.g., MCAD) &mdash; critical sample before dextrose</td></tr>
+              <tr><td>2-week-old + shock + Na 122 + K 7.8 + glucose 40</td><td>CAH salt-wasting &mdash; sample before hydrocortisone</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="cheat-section">
+          <h3>Pitfalls to teach</h3>
+          <table>
+            <thead><tr><th>Pitfall</th><th>Fix</th></tr></thead>
+            <tbody>
+              <tr><td>Reading pH first and stopping</td><td>Check PaCO2 and HCO3 against each other &mdash; normal pH can hide mixed disorder</td></tr>
+              <tr><td>Skipping albumin correction</td><td>Correct AG for albumin as a reflex &mdash; most consequential when raw AG looks normal</td></tr>
+              <tr><td>Applying delta ratio to alkalosis</td><td>Delta ratio only valid when AG is raised (HAGMA)</td></tr>
+              <tr><td>Calling high PaCO2 "ventilator lag"</td><td>Name it as a second primary disorder needing its own fix</td></tr>
+              <tr><td>Trusting SpO2 in anaemia or MetHb</td><td>SpO2 says nothing about delivery &mdash; use ScvO2, lactate, co-oximetry</td></tr>
+              <tr><td>Not checking SID on repeat gases</td><td>SID falling = chloride loading; acid has changed character</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script>
+const SEED_DEFAULT = "JIPMER-PCCM-26";
+const CASES = [
+{id:1,title:"DKA",
+ vignette:"10-year-old girl, 2 weeks of polyuria and 3 days of vomiting and abdominal pain. Acidotic breathing present, haemodynamically stable, GCS 11.",
+ gas_in:{pH:"7.08","PaCO2":"14","HCO3":"4","PaO2":"36","Na":"132","K":"4.5","Cl":"98","Albumin":"4.0","Glucose":"480","b-OHB":"5.8"},
+ steps_in:[["1. Clinical history","2 weeks of polyuria with vomiting and abdominal pain, Kussmaul breathing, GCS 11 - classical new-onset DKA with early obtundation."],
+  ["2. Internal validity","[H+] = 24 x 14 / 4 = 84 nmol/L -> pH 7.08 - matches. PaO2 36 suggests a venous sample."],
+  ["3. pH","7.08 - severe acidaemia."],["4. Primary disorder","HCO3 4 (low) with acidaemia -> metabolic acidosis."],
+  ["5. Expected compensation","Winter's: PaCO2 = 1.5 x 4 + 8 = 14 +/-2. Actual 14 - appropriate."],
+  ["6. Anion gap","AG = 132 - (98 + 4) = 30 (markedly raised). Albumin normal - no correction needed."],
+  ["7. Delta ratio","(30 - 12)/(24 - 4) = 0.9 -> pure HAGMA."],
+  ["8. Oxygenation & integration","Severe HAGMA with maximal appropriate respiratory compensation; AG 30 fully explained by ketoacids (b-OHB 5.8). Severe DKA."]],
+ sid_in:[["SID","132 - 98 = 34","Low-normal - mild chloride-driven component already present."],
+  ["Atot","Albumin 4.0","Normal."],["Unmeasured anions","30 - 5.8 = 24.2","Markedly raised - ketoacids dominate."],
+  ["Mechanism","-","Unmeasured anions, with mild chloride-driven component."]],
+ intervention:"10 mL/kg NS bolus, insulin infusion, NS + KCl.",
+ gas_post:{pH:"7.25","PaCO2":"26","HCO3":"11","PaO2":"34","Na":"142","K":"3.4","Cl":"119","Albumin":"4.0","Glucose":"230","b-OHB":"0.6"},
+ steps_post:[["2. Internal validity","[H+] ~56 nmol/L - internally valid."],["3. pH","7.25 - improving."],
+  ["4. Primary disorder","HCO3 11 -> metabolic acidosis."],
+  ["5. Expected compensation","Winter's: PaCO2 = 1.5 x 11 + 8 = 24.5 +/-2. Actual 26 - appropriate."],
+  ["6. Anion gap","AG = 142 - (119 + 11) = 12 (normal - HAGMA resolved)."],
+  ["7. Delta ratio","(12 - 12)/(24 - 11) = 0 -> pure NAGMA."],
+  ["9. SID / Stewart","SID = 142 - 119 = 23 (markedly low - chloride-driven). Unmeasured anions = 12 - 0.6 = 11.4 (normal). Mechanism changed: ketoacids cleared, chloride load now driving."]],
+ qs:["Calculate the corrected serum sodium.","What do the glucose and b-OHB values suggest?"],
+ ans:["Na+ + 1.6 x [(480 - 100)/100] ~138. True hyponatraemia is dilutional from hyperglycaemia.","Hyperglycaemic ketosis driving the gap - severe DKA."],
+ qs_post:["Compare this ABG with the initial ABG. What has changed?","Why is acidosis persisting despite improvement in glucose and b-OHB?","Calculate the corrected serum sodium."],
+ ans_post:["pH improved (7.08 to 7.25); PaCO2 rose (14 to 26); HCO3 rose modestly (4 to 11); glucose fell (480 to 230); b-OHB fell (5.8 to 0.6); Na rose (132 to 142); K fell (4.5 to 3.4); Cl rose sharply (98 to 119); AG normalised (30 to 12). The acid has changed character.",
+  "Ketoacidosis resolved. Persisting low HCO3 is now hyperchloraemic NAGMA from saline chloride load - expected, not treatment failure.",
+  "142 + 1.6 x [(230 - 100)/100] ~144."],
+ pitfalls:["Calling this respiratory alkalosis from the low PaCO2 alone.","Missing that the low PaO2 (venous sample) is itself a validity teaching point.","Forgetting to correct the anion gap for albumin as a reflex step."],
+ synthesis:"Severe DKA, appropriately compensated, pure HAGMA. Plan: fluid resuscitation, insulin infusion with potassium replacement anticipated.",
+ take:"Recalculate the anion gap on every repeat gas - a persistently low HCO3 after treatment can mean the acid has changed character."},
+{id:2,title:"Pyloric stenosis",
+ vignette:"6-week-old first-born boy with 10 days of progressively forceful, non-bilious vomiting after every feed. Sunken eyes, lethargic but arousable, still hungry after vomiting.",
+ gas_in:{pH:"7.52","PaCO2":"48","HCO3":"38","PaO2":"34","Na":"132","K":"3.0","Cl":"82","Albumin":"4.0","Glucose":"90","Urine Cl":"<15"},
+ steps_in:[["1. Clinical history","Classic for hypertrophic pyloric stenosis: forceful non-bilious vomiting after every feed, still hungry, with dehydration."],
+  ["2. Internal validity","[H+] = 24 x 48 / 38 = 30 -> pH 7.52 - matches. PaO2 34 suggests venous."],
+  ["3. pH","7.52 - alkalaemia."],["4. Primary disorder","HCO3 38 (raised) with alkalaemia -> metabolic alkalosis."],
+  ["5. Expected compensation","PaCO2 = 0.7 x 38 + 21 = 47.6 +/-2. Actual 48 - appropriate."],
+  ["6. Anion gap","AG = 132 - (82 + 38) = 12 (normal)."],["7. Delta ratio","Not applicable - no HAGMA."],
+  ["8. Oxygenation & integration","Hypochloraemic, hypokalaemic metabolic alkalosis with appropriate respiratory compensation; low urine Cl confirms chloride-responsive process."]],
+ sid_in:[["SID","132 - 82 = 50","Markedly high - chloride-loss alkalosis."],
+  ["Atot","Albumin 4.0","Normal."],["Unmeasured anions","AG 12 - 0 = 12","Normal."],
+  ["Mechanism","-","Loss of gastric HCl has removed chloride, raising SID."]],
+ intervention:"IV 0.9% saline + KCl, correct dehydration and hypokalaemia, then pyloromyotomy.",
+ gas_post:{pH:"7.45","PaCO2":"40","HCO3":"27","Na":"138","K":"4.0","Cl":"100","Albumin":"4.0","Urine Cl":">20"},
+ steps_post:[["9. SID / Stewart","SID = 138 - 100 = 38 (normalising - chloride repletion working). Urine Cl now >20 confirms kidney no longer conserving chloride."]],
+ qs:["What is the significance of the low urine chloride?","What is the likely clinical diagnosis?"],
+ ans:["Urine Cl < 15-20 mmol/L confirms chloride-responsive metabolic alkalosis: kidney appropriately conserving chloride. Alkalosis will correct with chloride-rich fluid. Contrast with chloride-resistant causes (Bartter/Gitelman) where urine Cl is inappropriately high.",
+  "Hypertrophic pyloric stenosis - persistent vomiting of gastric HCl and volume depletion produce hypochloraemic, hypokalaemic metabolic alkalosis."],
+ pitfalls:["Trying to apply the delta ratio or AG framework to an alkalosis.","Overlooking K 3.0 as an urgent, actionable finding."],
+ synthesis:"A textbook gas: use it to drill the metabolic-alkalosis compensation formula and the urine-chloride distinction.",
+ take:"A urine chloride confirms whether a metabolic alkalosis will respond to chloride repletion. SID tracks the response."},
+{id:3,title:"Gastroenteritis",
+ vignette:"8-month-old girl with 2 days of fever and large-volume loose stools. Sunken eyes, delayed skin turgor, prolonged capillary refill time.",
+ gas_in:{pH:"7.22","PaCO2":"27","HCO3":"11","PaO2":"34","Na":"129","K":"3.2","Cl":"112","Albumin":"3.5","Glucose":"85","Lactate":"1"},
+ steps_in:[["1. Clinical history","Acute gastroenteritis with large-volume diarrhoea and significant dehydration."],
+  ["2. Internal validity","[H+] = 24 x 27 / 11 = 59 -> pH 7.23 - matches."],
+  ["3. pH","7.22 - acidaemia."],["4. Primary disorder","HCO3 11 (low) -> metabolic acidosis."],
+  ["5. Expected compensation","Winter's: PaCO2 = 1.5 x 11 + 8 = 24.5 +/-2. Actual 27 is at upper edge - borderline."],
+  ["6. Anion gap","AG = 129 - (112 + 11) = 6. Corrected AG = 6 + 2.5 x (4 - 3.5) = 7.25 - still normal."],
+  ["7. Delta ratio","Not applicable - no raised AG."],
+  ["8. Oxygenation & integration","NAGMA (hyperchloraemic) from stool bicarbonate loss; normal lactate argues against hypoperfusion."]],
+ sid_in:[["SID","129 - 112 = 17","Markedly low - severe chloride-driven acidosis."],
+  ["Atot","Albumin 3.5","Mildly low - slightly alkalinising."],
+  ["Unmeasured anions","AG 6 - 1 = 5","Normal."],["Mechanism","-","Chloride-driven NAGMA."]],
+ intervention:"IV isotonic fluids, correct dehydration.",
+ gas_post:{pH:"7.35","PaCO2":"36","HCO3":"20","Na":"135","K":"4.0","Cl":"105","Albumin":"3.5","Lactate":"1"},
+ steps_post:[["6. Anion gap","AG = 135 - (105 + 20) = 10 - normal."],["9. SID / Stewart","SID = 135 - 105 = 30 (improving)."]],
+ qs:["What is the likely cause of the metabolic acidosis in this child?","How do the chloride and lactate values help you identify the mechanism?"],
+ ans:["Loss of bicarbonate-rich fluid in large-volume diarrhoea -> hyperchloraemic NAGMA.",
+  "Chloride elevated (112) as it replaces lost bicarbonate; normal lactate (1) argues against significant hypoperfusion."],
+ pitfalls:["Expecting a raised anion gap because the child is dehydrated.","Not pairing with Case 4 as a contrast: correction reveals nothing hidden here."],
+ synthesis:"Pair explicitly with Case 4 - both have normal-looking raw AG and mild hypoalbuminaemia, but correction reveals nothing hidden here, whereas in Case 4 it unmasks a concealed HAGMA.",
+ take:"A normal-anion-gap acidosis with a normal lactate points to GI bicarbonate loss, not hypoperfusion. SID confirms the chloride-driven mechanism."},
+{id:4,title:"Suspected IEM",
+ vignette:"8-month-old girl with 1 day of fever and vomiting. Effortless tachypnoea, haemodynamically stable, lethargic. History of similar episodes in the past.",
+ gas_in:{pH:"7.24","PaCO2":"38","HCO3":"16","PaO2":"38","Na":"135","K":"4","Cl":"107","Albumin":"2","Glucose":"85","Lactate":"3"},
+ steps_in:[["1. Clinical history","Short acute illness in an infant with history of similar prior episodes - recurrence is the key word."],
+  ["2. Internal validity","[H+] = 24 x 38 / 16 = 57 -> pH 7.24 - matches."],
+  ["3. pH","7.24 - acidaemia."],["4. Primary disorder","HCO3 16 (low) -> metabolic acidosis."],
+  ["5. Expected compensation","Winter's: PaCO2 = 1.5 x 16 + 8 = 32 +/-2. Actual 38 - higher than expected -> additional respiratory acidosis."],
+  ["6. Anion gap","Raw AG = 135 - (107 + 16) = 12. Albumin 2.0: corrected AG = 12 + 2.5 x (4 - 2) = 17 (clearly raised)."],
+  ["7. Delta ratio","Using corrected AG: (17 - 12)/(24 - 16) = 0.625 -> mixed HAGMA + NAGMA."],
+  ["8. Oxygenation & integration","Concealed HAGMA unmasked only after albumin correction, in a child with recurrent episodes -> suspect IEM."]],
+ sid_in:[["SID","135 - 107 = 28","Low - chloride-driven component."],
+  ["Atot","Albumin 2.0","Markedly low - alkalinising, masking HAGMA."],
+  ["Unmeasured anions","17 - 3 = 14","Raised."],
+  ["Mechanism","-","Three forces: low SID, low Atot (masking), unmeasured anions."]],
+ intervention:"Critical sample, dextrose, stop protein.",
+ gas_post:{pH:"7.35","PaCO2":"35","HCO3":"20","Na":"138","K":"4.2","Cl":"105","Albumin":"2.5","Glucose":"100","Lactate":"2"},
+ steps_post:[["9. SID / Stewart","SID = 138 - 105 = 33 (normalising). Atot still low (albumin 2.5) - still masking. Unmeasured anions = corrected AG (23.75) - 2 = 21.75 (still raised)."]],
+ qs:["Calculate the albumin-corrected anion gap.","Is there an additional respiratory disorder?","What is the significance of recurrent similar episodes in this clinical setting?"],
+ ans:["12 + 2.5 x (4.0 - 2.0) = 17 mEq/L. Raw gap of 12 looked normal; low albumin was masking a real HAGMA.",
+  "Yes - Winter's predicts PaCO2 30-34; actual 38 is higher -> inadequate compensation.",
+  "Recurrent metabolic decompensation triggered by intercurrent illness raises strong suspicion for underlying IEM. Prompt metabolic work-up: ammonia, lactate, urine organic acids, plasma amino acids, acylcarnitine - the critical sample."],
+ pitfalls:["Stopping at AG 12, normal, without applying the albumin correction - the single most consequential miss.","Treating lactate 3 as fully explaining the anion-gap elevation."],
+ synthesis:"Correct the anion gap for albumin as a reflex, every time, especially when the raw number looks reassuring.",
+ take:"Correct the anion gap for albumin as a reflex, every time - it is most consequential exactly when the raw number looks reassuring. Also check SID."},
+{id:5,title:"Salicylate poisoning",
+ vignette:"15-year-old boy with tinnitus, fast breathing, vomiting, and confusion after intentional ingestion.",
+ gas_in:{pH:"7.42","PaCO2":"18","HCO3":"11","PaO2":"108","Na":"140","K":"4.2","Cl":"102","Albumin":"4.1","Glucose":"90","Lactate":"3.2"},
+ steps_in:[["1. Clinical history","Tinnitus, hyperventilation, vomiting, confusion after intentional ingestion in a teenager - tinnitus is the most specific clue."],
+  ["2. Internal validity","[H+] = 24 x 18 / 11 = 39 -> pH 7.41 - matches 7.42. Plausible arterial."],
+  ["3. pH","7.42 - essentially normal (the trap)."],
+  ["4. Primary disorder","Two markedly abnormal primary values (PaCO2 18, HCO3 11) with near-normal pH - mixed disorder."],
+  ["5. Expected compensation","If HCO3 11 were the only problem, Winter's predicts PaCO2 24.5 +/-2. Actual 18 is far below that - separate primary respiratory alkalosis."],
+  ["6. Anion gap","AG = 140 - (102 + 11) = 27 (markedly raised). Lactate only partly explains."],
+  ["7. Delta ratio","(27 - 12)/(24 - 11) = 1.15 -> HAGMA."],
+  ["8. Oxygenation & integration","Primary respiratory alkalosis + primary HAGMA, opposing pH effects cancelling to near-normal pH - classic salicylate poisoning."]],
+ sid_in:[["SID","140 - 102 = 38","High-normal - no chloride-driven component."],
+  ["Atot","Albumin 4.1","Normal."],["Unmeasured anions","27 - 3.2 = 23.8","Markedly raised - salicylate metabolites + ketones."],
+  ["Mechanism","-","Unmeasured anions + primary respiratory alkalosis."]],
+ intervention:"Activated charcoal, IV fluids, sodium bicarbonate, alkalinise urine, consider dialysis.",
+ gas_post:{pH:"7.48","PaCO2":"30","HCO3":"22","Na":"142","K":"3.8","Cl":"105","Albumin":"4.1","Lactate":"1.5"},
+ steps_post:[["9. SID / Stewart","SID = 142 - 105 = 37 (normal). Unmeasured anions = AG (15) - 1.5 = 13.5 (improving)."]],
+ qs:["A near-normal pH can conceal a mixed disorder. What disorders are present here?","What poisoning is suggested by the clinical history and ABG pattern?"],
+ ans:["Primary respiratory alkalosis (PaCO2 far lower than metabolic compensation alone would predict - direct salicylate stimulation of central respiratory centre) + primary HAGMA (AG 27, from lactate, ketosis, salicylate organic acids).",
+  "Salicylate (aspirin) poisoning - classic triad of tinnitus, hyperventilation, and mixed respiratory-alkalosis/HAGMA pattern."],
+ pitfalls:["Seeing pH 7.42 and concluding the gas is essentially normal.","Attributing low PaCO2 purely to appropriate compensation without checking against Winter's."],
+ synthesis:"This case exists to break the habit of reading the pH first and stopping.",
+ take:"A near-normal pH never means a normal gas - check PaCO2 and HCO3 against each other before you trust it. SID helps distinguish chloride-driven from unmeasured-anion-driven acidosis."},
+{id:6,title:"Post-arrest hanging",
+ vignette:"5-year-old boy, 20 kg, accidental hanging. Post-arrest, ROSC after 15 min CPR, ventilated. PEEP 6, PIP 16, RR 20, I:E 1:2, FiO2 100%, TV 80 mL, MAP 17.",
+ gas_in:{pH:"6.88","PaCO2":"65","HCO3":"12","PaO2":"70","Na":"138","K":"6.2","Cl":"98","Albumin":"4.1","Glucose":"210","Lactate":"3.2"},
+ steps_in:[["1. Clinical history","Post-cardiac-arrest after prolonged CPR for hanging - expect hypoxic-ischaemic metabolic acidosis and possible inadequate ventilation."],
+  ["2. Internal validity","[H+] = 24 x 65 / 12 = 130 -> pH 6.89 - matches 6.88."],
+  ["3. pH","6.88 - profound, life-threatening acidaemia."],
+  ["4. Primary disorder","Both HCO3 12 and PaCO2 65 abnormal in acidifying direction - combined metabolic + respiratory acidosis."],
+  ["5. Expected compensation","If pure metabolic, Winter's predicts PaCO2 26 +/-2. Actual 65 far above - large separate primary respiratory acidosis."],
+  ["6. Anion gap","AG = 138 - (98 + 12) = 28 (markedly raised). Lactate 3.2 does not fully explain."],
+  ["7. Delta ratio","(28 - 12)/(24 - 12) = 1.33 -> HAGMA component."],
+  ["8. Oxygenation & integration","P/F = 70/1.0 = 70. OI = (17 x 1.0 x 100)/70 = 24.3. Severe ARDS (PALICC OI >=16)."]],
+ sid_in:[["SID","138 - 98 = 40","High-normal - no chloride-driven component."],
+  ["Atot","Albumin 4.1","Normal."],["Unmeasured anions","28 - 3.2 = 24.8","Markedly raised - hypoxic-ischaemic anions."],
+  ["Mechanism","-","Unmeasured anions + primary respiratory acidosis."]],
+ intervention:"Increase ventilation, treat hyperkalaemia, fluids, consider bicarbonate.",
+ gas_post:{pH:"7.25","PaCO2":"40","HCO3":"17","PaO2":"90","Na":"138","K":"4.5","Cl":"100","Albumin":"4.1","Glucose":"180","Lactate":"2.5"},
+ steps_post:[["9. SID / Stewart","SID = 138 - 100 = 38 (normal). Unmeasured anions = AG (21) - 2.5 = 18.5 (still raised)."]],
+ qs:["Identify all components of the mixed acid-base disorder.","Calculate the P/F ratio and oxygenation index using the available data.","How would you grade the severity of oxygenation failure?"],
+ ans:["(1) Primary metabolic acidosis (HCO3 12, AG 28 - hypoxic-ischaemic/lactic) and (2) primary respiratory acidosis (PaCO2 65, far exceeding expected ~26).",
+  "P/F = 70/1.0 = 70. OI = (17 x 1.0 x 100)/70 = 24.3.",
+  "OI 24.3 = severe oxygenation failure (PALICC OI >=16 = severe)."],
+ pitfalls:["Assuming high PaCO2 is simply the ventilator not yet caught up without naming it as a second primary disorder.","Not flagging K 6.2 as immediate actionable safety issue.","Not noticing lactate 3.2 under-explains AG 28."],
+ synthesis:"Most acidotic gas in the set exists to force explicit separation of the two acidoses and bring in oxygenation indices.",
+ take:"When PaCO2 and HCO3 are both markedly abnormal in the same direction, name both disorders explicitly - one is not compensating for the other. SID confirms no chloride-driven component."},
+{id:7,title:"Septic shock + severe anaemia",
+ vignette:"4-year-old boy with septic shock and severe anaemia. FiO2 40%, SpO2 99%, ScvO2 42%.",
+ gas_in:{pH:"7.25","PaCO2":"26","HCO3":"11","PaO2":"110","Na":"138","K":"4.3","Cl":"106","Albumin":"4.1","Hb":"4.5","Lactate":"7"},
+ steps_in:[["1. Clinical history","Septic shock with severe anaemia (Hb 4.5) - two independent reasons for impaired oxygen delivery."],
+  ["2. Internal validity","[H+] = 24 x 26 / 11 = 57 -> pH 7.25 - matches."],
+  ["3. pH","7.25 - acidaemia."],["4. Primary disorder","HCO3 11 (low) -> metabolic acidosis."],
+  ["5. Expected compensation","Winter's: PaCO2 = 1.5 x 11 + 8 = 24.5 +/-2. Actual 26 - appropriate."],
+  ["6. Anion gap","AG = 138 - (106 + 11) = 21 (raised). Albumin normal, negligible correction."],
+  ["7. Delta ratio","(21 - 12)/(24 - 11) = 0.69 -> mixed HAGMA + NAGMA."],
+  ["8. Oxygenation & integration","P/F = 110/0.4 = 275. ScvO2 42% - tissues extracting far more O2 than usual. CaO2 = (1.34 x 4.5 x 0.99) + (0.003 x 110) = 6.3 mL/dL."]],
+ sid_in:[["SID","138 - 106 = 32","Low - chloride-driven component from resuscitation fluids."],
+  ["Atot","Albumin 4.1","Normal."],["Unmeasured anions","21 - 7 = 14","Raised - lactic acidosis."],
+  ["Mechanism","-","Two forces: low SID + unmeasured anions."]],
+ intervention:"Blood transfusion, antibiotics, fluids, vasopressors.",
+ gas_post:{pH:"7.35","PaCO2":"36","HCO3":"20","PaO2":"100","Na":"138","K":"4.0","Cl":"105","Albumin":"3.8","Hb":"9.0","Lactate":"2.5","ScvO2":"65%"},
+ steps_post:[["9. SID / Stewart","SID = 138 - 105 = 33 (low-normal). Unmeasured anions = AG (13) - 2.5 = 10.5 (normalising)."]],
+ qs:["Calculate the P/F ratio.","How do you interpret the low ScvO2 despite a normal SpO2?","What do the severe anaemia and elevated lactate indicate about oxygen delivery and extraction?"],
+ ans:["110 / 0.4 = 275 - mild oxygenation impairment; not where the problem lies.",
+  "Large veno-arterial oxygen extraction gap: lungs saturating haemoglobin normally, but tissues extracting abnormally high fraction because overall DO2 inadequate relative to demand.",
+  "Severe anaemia critically reduces CaO2 and therefore DO2, even though saturation normal. Body compensates initially by increasing extraction (low ScvO2), but once exceeded, anaerobic metabolism follows - lactate 7. Priority: transfusion."],
+ pitfalls:["Reassurance from normal SpO2/PaO2 without looking at ScvO2.","Forgetting that severe anaemia is, by itself, full explanation for impaired oxygen delivery."],
+ synthesis:"Anchor on oxygen-delivery equation (DO2 = cardiac output x CaO2, and CaO2 driven mainly by Hb x SO2).",
+ take:"A normal SpO2 says nothing about oxygen delivery when haemoglobin is this low - look at ScvO2 and lactate, not the saturation monitor. SID reveals the chloride-driven component."},
+{id:8,title:"Methaemoglobinaemia",
+ vignette:"10-year-old boy with cyanosis, headache, tachycardia, and lethargy after receiving topical benzocaine. Blood sample drawn looks chocolate-brown. FiO2 90%, SpO2 85%, SO2 65%.",
+ gas_in:{pH:"7.36","PaCO2":"38","HCO3":"21","PaO2":"550","Na":"138","K":"4.3","Cl":"105","Albumin":"4.1","MetHb":"35%","Lactate":"2"},
+ steps_in:[["1. Clinical history","Cyanosis, headache, tachycardia, lethargy after topical benzocaine, with chocolate-brown blood - close to diagnostic before numbers read."],
+  ["2. Internal validity","[H+] = 24 x 38 / 21 = 43 -> pH 7.36 - matches. Essentially normal acid-base gas."],
+  ["3. pH","7.36 - essentially normal."],["4. Primary disorder","No significant primary acid-base disorder. Acid-base is distraction."],
+  ["5. Expected compensation","Not applicable."],["6. Anion gap","AG = 138 - (105 + 21) = 12 (normal)."],
+  ["7. Delta ratio","Not applicable."],
+  ["8. Oxygenation & integration","P/F = 550/0.9 = 611 (remarkably high). Yet SpO2 85%, SO2 65% - large discordant saturation gap. MetHb 35% (normal <1-2%)."]],
+ sid_in:[["SID","138 - 105 = 33","Low-normal - mild chloride-driven component."],
+  ["Atot","Albumin 4.1","Normal."],["Unmeasured anions","12 - 2 = 10","Normal. Acid-base status benign."],
+  ["Mechanism","-","Acid-base is not the story; oxygenation is."]],
+ intervention:"Methylene blue 1-2 mg/kg IV (check G6PD status first), oxygen, stop benzocaine.",
+ gas_post:{pH:"7.38","PaCO2":"38","HCO3":"23","PaO2":"200","Na":"138","K":"4.0","Cl":"105","Albumin":"4.1","MetHb":"5%","Lactate":"1.5","SpO2":"98%","SO2":"95%"},
+ steps_post:[["9. SID / Stewart","SID = 138 - 105 = 33 (low-normal). Unmeasured anions = AG (10) - 1.5 = 8.5 (normal)."]],
+ qs:["Calculate the P/F ratio.","How do you explain the discrepancy between the very high PaO2, SpO2, and SO2?","What is the significance of the chocolate-brown blood and MetHb 35%?","What is the most likely diagnosis?"],
+ ans:["550 / 0.9 ~611.",
+  "PaO2 measures dissolved oxygen tension and is unaffected by methaemoglobin. Methaemoglobin (Fe3+, unable to bind oxygen) distorts pulse oximeter algorithm, driving SpO2 toward falsely fixed value ~82-85%. Directly measured SO2 by co-oximetry (65%) reflects true, much lower functional saturation - 35% of haemoglobin cannot carry oxygen at all.",
+  "Chocolate-brown blood is classic bedside sign. MetHb 35% confirms severe elevation - enough to cause significant functional anaemia. Explains cyanosis, headache, tachycardia, lethargy despite high PaO2.",
+  "Acquired methaemoglobinaemia (benzocaine-induced)."],
+ pitfalls:["Getting drawn into acid-base analysis when the gas is essentially normal.","Assuming a high PaO2 guarantees adequate oxygen delivery."],
+ synthesis:"Close with the rule this case exists to teach: a normal or high PaO2 does not guarantee normal oxygen-carrying capacity.",
+ take:"A high PaO2 does not guarantee oxygen-carrying capacity - whenever SpO2 and PaO2 disagree, request co-oximetry before you do anything else."},
+{id:9,title:"Two encephalopathic neonates",
+ vignette:"Baby A: 4 days old, fed well until day 2, now lethargic and tachypnoeic. Afebrile, clear chest. On antibiotics for sepsis. Baby B: 7 days old, vomiting, lethargic, deep rapid breathing. Platelets 60,000/uL, urine ketones 3+.",
+ gas_in:{"A pH":"7.51","A PaCO2":"26","A HCO3":"20","A SBE":"-1","A Na/Cl":"138/104","A Glucose":"85","A Lactate":"1.8","B pH":"7.14","B PaCO2":"18","B HCO3":"6","B SBE":"-21","B Na/Cl":"136/100","B Glucose":"45","B Lactate":"3.0"},
+ steps_in:[["1. Clinical history","A: fed well until day 2, now lethargic and tachypnoeic; sepsis label but afebrile, clear chest. B: vomiting, lethargic, deep rapid breathing, thrombocytopenia, ketonuria."],
+  ["2. Internal validity","A: [H+] = 24 x 26 / 20 = 31 -> pH 7.51 - matches. B: [H+] = 24 x 18 / 6 = 72 -> pH 7.14 - matches."],
+  ["3. pH","A: 7.51 - alkalaemia. B: 7.14 - acidaemia."],
+  ["4. Primary disorder","A: PaCO2 26 (low) -> respiratory alkalosis. B: HCO3 6 (low) -> metabolic acidosis."],
+  ["5. Expected compensation","A: acute resp alkalosis expected HCO3 ~21.2; actual 20 - appropriate. B: Winter's predicted PaCO2 17 +/-2; actual 18 - appropriate."],
+  ["6. Anion gap","A: AG = 138 - (104 + 20) = 14 (normal). B: AG = 136 - (100 + 6) = 30 (markedly raised)."],
+  ["7. Delta ratio","A: not applicable. B: (30 - 12)/(24 - 6) = 1.0 -> HAGMA."],
+  ["8. Oxygenation & integration","A: sepsis alone does not explain respiratory alkalosis - suspect hyperammonaemia. B: lactate only 3.0 - rest of gap filled by ketones and organic acids."]],
+ sid_in:[["A SID","138 - 104 = 34","Low-normal."],
+  ["A Unmeasured","14 - 1.8 = 12.2","Normal. Mechanism: respiratory alkalosis."],
+  ["B SID","136 - 100 = 36","Normal."],
+  ["B Unmeasured","30 - 3 = 27","Markedly raised - organic acids/ketones."]],
+ intervention:"Both: ammonia level, stop protein, dextrose. A: ammonia scavengers if high. B: carnitine, treat acidosis.",
+ gas_post:{"A pH":"7.45","A PaCO2":"35","A HCO3":"22","A Na/Cl":"138/105","A Glucose":"90","A Lactate":"1.5","B pH":"7.30","B PaCO2":"25","B HCO3":"12","B Na/Cl":"138/102","B Glucose":"100","B Lactate":"2.0"},
+ steps_post:[["9. SID / Stewart","A: SID = 138 - 105 = 33; unmeasured anions normal. B: SID = 138 - 102 = 36; unmeasured anions = AG (24) - 2 = 22 (still raised)."]],
+ qs:["Name the primary disorder in each baby. Is compensation appropriate in each?","Which features does sepsis alone fail to explain?","Baby B has an anion gap of 30 but lactate is only 3. What fills the rest?","Intervene: what one test do you send in both, how must the sample be handled, and what do you do while waiting?"],
+ ans:["A: respiratory alkalosis, appropriate. B: metabolic acidosis, appropriate.",
+  "A: respiratory alkalosis without fever or distress. B: severe HAGMA with ketones and hypoglycaemia.",
+  "Ketones (urine 3+) and organic acids from inborn error of metabolism.",
+  "Ammonia. Sample on ice, delivered to lab within 15 minutes. While waiting: stop protein, give dextrose, prepare ammonia scavengers."],
+ pitfalls:["Attributing Baby A alkalosis to sepsis without considering hyperammonaemia.","Not checking ammonia on ice for both babies.","Assuming lactate explains Baby B AG when it only accounts for part."],
+ synthesis:"Both babies have a metabolic disorder masquerading as sepsis. The gas is the clue - ammonia on ice is the test.",
+ take:"Neonatal encephalopathy + abnormal gas = metabolic screen; ammonia on ice is critical. SID helps distinguish chloride-driven from unmeasured-anion-driven acidosis."},
+{id:10,title:"HUS-like",
+ vignette:"3-year-old, 5 days after bloody diarrhoea, now oliguric and pale. Hb 6.2 g/dL, platelets 40,000/uL, creatinine 3.8 mg/dL.",
+ gas_in:{pH:"7.22","PaCO2":"25","HCO3":"10","SBE":"-16","Na":"131","K":"6.8","Cl":"104","Albumin":"3.0","Phosphate":"9.5","iCa":"0.92"},
+ steps_in:[["1. Clinical history","Bloody diarrhoea followed by oliguria and pallor, with anaemia, thrombocytopenia, and renal failure - HUS-like picture."],
+  ["2. Internal validity","[H+] = 24 x 25 / 10 = 60 -> pH 7.22 - matches."],
+  ["3. pH","7.22 - acidaemia."],["4. Primary disorder","HCO3 10 (low) -> metabolic acidosis."],
+  ["5. Expected compensation","Winter's: PaCO2 = 1.5 x 10 + 8 = 23 +/-2. Actual 25 - appropriate."],
+  ["6. Anion gap","AG = 131 - (104 + 10) = 17. Albumin-corrected AG = 17 + 2.5 x (4 - 3.0) = 19.5 (raised)."],
+  ["7. Delta ratio","(17 - 12)/(24 - 10) = 5/14 = 0.36 -> mixed NAGMA + HAGMA."],
+  ["8. Oxygenation & integration","Mixed acidosis; hyperkalaemia and hypocalcaemia are immediate threats."]],
+ sid_in:[["SID","131 - 104 = 27","Markedly low - chloride-driven."],
+  ["Atot","Albumin 3.0 (alkalinising), phosphate 9.5 (markedly acidifying)","Net high Atot."],
+  ["Unmeasured anions","19.5 - 0 = 19.5","Raised - urate, oxalate, retained organic anions."],
+  ["Mechanism","-","Three forces: low SID + high Atot (phosphate) + unmeasured anions."]],
+ intervention:"Dialysis, treat hyperkalaemia and hypocalcaemia.",
+ gas_post:{pH:"7.35","PaCO2":"35","HCO3":"18","Na":"135","K":"4.5","Cl":"105","Albumin":"3.2","Phosphate":"6.0","iCa":"1.0"},
+ steps_post:[["9. SID / Stewart","SID = 135 - 105 = 30 (improving). Atot: phosphate improved from 9.5 to 6.0. Unmeasured anions = AG (12) - 0 = 12 (normalising)."]],
+ qs:["Is compensation appropriate? What are the anion gap and the albumin-corrected anion gap?","Calculate the delta ratio. What does it tell you?","Using SID and Atot, name the three separate forces acidifying this child.","Intervene: which two sidekick values change your next 10 minutes? The team asks for bicarbonate - what do you say?"],
+ ans:["Appropriate. AG 17, corrected AG 19.5.","0.36 -> mixed NAGMA + HAGMA.",
+  "Low SID (chloride-driven), high Atot (phosphate), unmeasured anions.",
+  "K 6.8 (hyperkalaemia) and iCa 0.92 (hypocalcaemia). Bicarbonate? No - pH 7.22 not severe; bicarbonate can worsen hypocalcaemia and hyperkalaemia."],
+ pitfalls:["Missing that all three Stewart forces are active here.","Not recognising K 6.8 and iCa 0.92 as immediate actionable threats.","Reaching for bicarbonate without considering the risks."],
+ synthesis:"This is the triple-hit acidosis case. SID, Atot, and unmeasured anions each contribute. Treat the electrolytes first.",
+ take:"HUS = mixed acidosis; hyperkalaemia and hypocalcaemia are immediate threats. SID, Atot, and unmeasured anions each tell a different part of the story."},
+{id:11,title:"Hepatitis A encephalopathy",
+ vignette:"6-year-old with hepatitis A, grade II encephalopathy. INR 4.2, ammonia 180 umol/L.",
+ gas_in:{pH:"7.49","PaCO2":"28","HCO3":"21","SBE":"-1","Na":"132","K":"3.0","Cl":"98","Albumin":"2.2","Lactate":"5.5","Glucose":"45"},
+ steps_in:[["1. Clinical history","Hepatitis A with grade II encephalopathy, coagulopathy, hyperammonaemia."],
+  ["2. Internal validity","[H+] = 24 x 28 / 21 = 32 -> pH 7.49 - matches."],
+  ["3. pH","7.49 - alkalaemia."],["4. Primary disorder","PaCO2 28 (low) -> respiratory alkalosis."],
+  ["5. Expected compensation","Acute resp alkalosis: HCO3 falls ~2 per 10 mmHg fall in PaCO2. Expected HCO3 ~21.6. Actual 21 - appropriate."],
+  ["6. Anion gap","AG = 132 - (98 + 21) = 13. Corrected AG = 13 + 2.5 x (4 - 2.2) = 17.5 (HAGMA masked by hypoalbuminaemia)."],
+  ["7. Delta ratio","Using corrected AG: (17.5 - 12)/(24 - 21) = 1.83 -> mixed."],
+  ["8. Oxygenation & integration","Respiratory alkalosis + masked HAGMA + hypoglycaemia."]],
+ sid_in:[["SID","132 - 98 = 34","Low-normal."],
+  ["Atot","Albumin 2.2","Markedly low - alkalinising, masking HAGMA."],
+  ["Unmeasured anions","17.5 - 5.5 = 12","Raised."],
+  ["Mechanism","-","Masked HAGMA + respiratory alkalosis."]],
+ intervention:"Dextrose, lactulose, ammonia scavengers.",
+ gas_post:{pH:"7.42","PaCO2":"32","HCO3":"20","Na":"135","K":"3.5","Cl":"100","Albumin":"2.5","Lactate":"3.0","Glucose":"100"},
+ steps_post:[["9. SID / Stewart","SID = 135 - 100 = 35 (normal). Atot still low (albumin 2.5) - still masking. Unmeasured anions = corrected AG (18.75) - 3 = 15.75 (still raised)."]],
+ qs:["What is the primary disorder, and why is this child alkaline?","Calculate the anion gap, then correct it for albumin. What changes?","The base excess is -1, which looks normal. Why is that misleading? How many processes are running at once?","Intervene: which two sidekicks need treating in the next few minutes, and why does one of them worsen the encephalopathy?"],
+ ans:["Respiratory alkalosis due to hyperventilation from ammonia stimulating respiratory centre.",
+  "AG 13, corrected AG 17.5. Low albumin was masking a HAGMA.",
+  "Yes - because HAGMA is masked by hypoalbuminaemia. Multiple processes: respiratory alkalosis, HAGMA (lactic acidosis), hypoglycaemia.",
+  "Glucose 45 (hypoglycaemia) and lactate 5.5 (lactic acidosis). Hypoglycaemia worsens encephalopathy."],
+ pitfalls:["Taking SBE -1 at face value without correcting AG for albumin.","Missing that the low albumin is masking a HAGMA.","Not treating hypoglycaemia urgently."],
+ synthesis:"The SBE looks normal, but the low albumin is lying to you. Correct the AG, check SID, and treat the glucose.",
+ take:"Hepatitis A encephalopathy = respiratory alkalosis + HAGMA; check glucose. Always correct the AG for albumin, and check SID - the SBE may look normal while a HAGMA is masked."},
+{id:12,title:"Fasting hypoglycaemia",
+ vignette:"18-month-old, previously well, fasted overnight after gastroenteritis and presented with a seizure. Liver palpable 3 cm. ALT 180 U/L, ammonia 110 umol/L, free fatty acids raised.",
+ gas_in:{Glucose:"30",pH:"7.36","PaCO2":"36","HCO3":"20","SBE":"-4","Na/Cl":"138/105",Lactate:"2.0","b-OHB":"0.3"},
+ steps_in:[["1. Clinical history","Fasting hypoglycaemia with seizure, hepatomegaly, raised ALT and ammonia, raised free fatty acids - key is the inappropriately low ketones."],
+  ["2. Internal validity","[H+] = 24 x 36 / 20 = 43 -> pH 7.36 - matches."],
+  ["3. pH","7.36 - normal."],["4. Primary disorder","HCO3 20 (slightly low), SBE -4 -> mild metabolic acidosis."],
+  ["5. Expected compensation","Not applicable (primary metabolic)."],["6. Anion gap","AG = 138 - (105 + 20) = 13 (normal)."],
+  ["7. Delta ratio","Not applicable (NAGMA)."],
+  ["8. Oxygenation & integration","Near-normal gas but hypoglycaemia with low ketones -> failure of ketogenesis."]],
+ sid_in:[["SID","138 - 105 = 33","Low-normal - mild chloride-driven component."],
+  ["Atot","Albumin not given","-"],["Unmeasured anions","13 - 2 = 11","Normal."],
+  ["Mechanism","-","Acidosis mild and chloride-driven; the story is ketogenesis failure."]],
+ intervention:"Critical sample, then dextrose.",
+ gas_post:{Glucose:"100",pH:"7.38","PaCO2":"38","HCO3":"22","SBE":"-1","Na/Cl":"138/105",Lactate:"1.5","b-OHB":"0.2"},
+ steps_post:[["9. SID / Stewart","SID = 138 - 105 = 33 (low-normal). Unmeasured anions = AG (11) - 1.5 = 9.5 (normal)."]],
+ qs:["The gas looks almost normal. Why is that the most worrying finding?","What should a fasting child gas and ketones look like?","Free fatty acids are high but ketones are low. What does that mean? How would hyperinsulinism differ?","Intervene: list the critical sample. When exactly must it be drawn, and what do you give immediately afterwards?"],
+ ans:["In a fasting child, expected ketosis and metabolic acidosis. Normal gas with low b-OHB (0.3) indicates failure of ketogenesis.",
+  "Metabolic acidosis with high anion gap due to ketones.",
+  "Block in fatty acid oxidation or ketogenesis (e.g., MCAD deficiency). Hyperinsulinism would have low FFA and low ketones.",
+  "Must be drawn during hypoglycaemia before treatment. Includes glucose, insulin, C-peptide, cortisol, growth hormone, ketones, free fatty acids, acylcarnitine profile, ammonia, lactate, LFTs. Give dextrose (2-3 mL/kg of 10% dextrose) immediately after."],
+ pitfalls:["Being reassured by the near-normal gas and missing the hypoglycaemia with inappropriately low ketones.","Drawing the critical sample after giving dextrose."],
+ synthesis:"The gas is a distraction. The diagnosis is in the glucose and ketones. Critical sample before dextrose.",
+ take:"Fasting hypoglycaemia with low ketones = think fatty acid oxidation defect; critical sample before treatment. SID confirms the acidosis was mild and chloride-driven, not the primary problem."},
+{id:13,title:"Shocked 2-week-old boy",
+ vignette:"2-week-old boy with 3 days of vomiting and poor feeding, now mottled and lethargic. Genitalia look normal. Weight below birth weight.",
+ gas_in:{pH:"7.27","PaCO2":"28","HCO3":"12.5","SBE":"-13","Na":"122","K":"7.8","Cl":"98","Glucose":"40"},
+ steps_in:[["1. Clinical history","Neonatal shock with vomiting, poor feeding, mottling, lethargy, weight loss."],
+  ["2. Internal validity","[H+] = 24 x 28 / 12.5 = 54 -> pH 7.27 - matches."],
+  ["3. pH","7.27 - acidaemia."],["4. Primary disorder","HCO3 12.5 (low) -> metabolic acidosis."],
+  ["5. Expected compensation","Winter's: PaCO2 = 1.5 x 12.5 + 8 = 26.75 +/-2. Actual 28 - appropriate."],
+  ["6. Anion gap","AG = 122 - (98 + 12.5) = 11.5 (normal). NAGMA."],
+  ["7. Delta ratio","Not applicable."],
+  ["8. Oxygenation & integration","NAGMA with hyponatraemia, hyperkalaemia, hypoglycaemia -> CAH salt-wasting crisis."]],
+ sid_in:[["SID","122 - 98 = 24","Markedly low - chloride-driven acidosis."],
+  ["Atot","Albumin not given","-"],["Unmeasured anions","11.5 - 0 = 11.5","Normal."],
+  ["Mechanism","-","Chloride-driven NAGMA."]],
+ intervention:"Hydrocortisone, fluids with dextrose, treat hyperkalaemia.",
+ gas_post:{pH:"7.35","PaCO2":"35","HCO3":"18","SBE":"-5","Na":"135","K":"5.0","Cl":"100","Glucose":"90"},
+ steps_post:[["9. SID / Stewart","SID = 135 - 100 = 35 (normalising). Unmeasured anions = AG (17) - 0 = 17 (raised - resolving)."]],
+ qs:["Classify the acid-base disorder and check compensation. Is this a HAGMA or a NAGMA?","Three sidekick values make the diagnosis before any specialised test. Which, and what is it?","A vomiting 2-week-old with pyloric stenosis would show which gas instead?","Intervene: what are your first three actions, and which sample must precede them?"],
+ ans:["NAGMA with appropriate compensation.",
+  "Na 122 (hyponatraemia), K 7.8 (hyperkalaemia), glucose 40 (hypoglycaemia) -> CAH.",
+  "Metabolic alkalosis (hypochloraemic, hypokalaemic).",
+  "(1) IV access, draw critical sample (electrolytes, glucose, cortisol, ACTH, 17-OHP, renin, aldosterone). (2) Give stress-dose hydrocortisone. (3) IV fluids with dextrose and sodium. Sample must precede hydrocortisone."],
+ pitfalls:["Not recognising the triad of hyponatraemia, hyperkalaemia, and hypoglycaemia as CAH.","Giving hydrocortisone before drawing the critical sample.","Giving potassium-containing fluids to a hyperkalaemic neonate."],
+ synthesis:"Neonatal shock + NAGMA + hyperkalaemia + hyponatraemia = CAH until proven otherwise. Draw the sample before steroids.",
+ take:"Neonatal shock + NAGMA + hyperkalaemia + hyponatraemia = CAH until proven otherwise. SID confirms the chloride-driven mechanism and tracks response to therapy."}
+];
+function unlockCode(caseId, seed){
+  let h = 2166136261 >>> 0;
+  const s = "case-" + caseId + "|" + seed;
+  for (let i=0; i<s.length; i++){
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619) >>> 0;
+  }
+  const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let out = "";
+  for (let i=0; i<4; i++){
+    out += alphabet[h % alphabet.length];
+    h = Math.floor(h / alphabet.length) + 7;
+  }
+  return out;
+}
+const LS = {
+  profile : "abg:profile",
+  unlocked: "abg:unlocked",
+  seed    : "abg:seed",
+  answers : function(group){ return "abg:answers:" + group; }
+};
+function load(k, fb){
+  try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : fb; }
+  catch(e){ return fb; }
+}
+function save(k, v){
+  try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){}
+}
+var STATE = {
+  profile : load(LS.profile, null),
+  unlocked: load(LS.unlocked, {}),
+  seed    : load(LS.seed, SEED_DEFAULT),
+  answers : {},
+  current : 1
+};
+function loadAnswers(){
+  if (!STATE.profile) return;
+  STATE.answers = load(LS.answers(STATE.profile.group), {});
+}
+function persistAnswers(){
+  if (!STATE.profile) return;
+  save(LS.answers(STATE.profile.group), STATE.answers);
+}
+function $(s, r){ return (r||document).querySelector(s); }
+function $$(s, r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); }
+function esc(s){
+  return String(s).replace(/[&<>"']/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+  });
+}
+var toastTimer;
+function toast(msg){
+  var t = $("#toast");
+  t.textContent = msg;
+  t.classList.add("on");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ t.classList.remove("on"); }, 2200);
+}
+var saveTimer;
+function flashSaving(){
+  var a = $("#autosave");
+  a.classList.add("saving");
+  $("#autosaveTxt").textContent = "Saving...";
+}
+function flashSaved(){
+  var a = $("#autosave");
+  a.classList.remove("saving");
+  $("#autosaveTxt").textContent = "Saved";
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(function(){ $("#autosaveTxt").textContent = "Ready"; }, 1400);
+}
+function caseById(id){
+  for (var i=0; i<CASES.length; i++) if (CASES[i].id === id) return CASES[i];
+  return null;
+}
+function getCaseAnswer(caseId){
+  if (!STATE.answers[caseId]) STATE.answers[caseId] = {steps:{}, sid:{}, qs:{}};
+  var a = STATE.answers[caseId];
+  a.steps = a.steps || {};
+  a.sid = a.sid || {};
+  a.qs = a.qs || {};
+  return a;
+}
+function isUnlocked(caseId){ return !!STATE.unlocked[caseId]; }
+
+function initLanding(){
+  var nameInput = $("#pname");
+  var selectedGroup = null;
+  if (STATE.profile){
+    nameInput.value = STATE.profile.name || "";
+    selectedGroup = STATE.profile.group || null;
+  }
+  $$("#groupGrid button").forEach(function(b){
+    if (b.dataset.g === selectedGroup) b.classList.add("active");
+    b.addEventListener("click", function(){
+      $$("#groupGrid button").forEach(function(x){ x.classList.remove("active"); });
+      b.classList.add("active");
+      selectedGroup = b.dataset.g;
+    });
+  });
+  function start(){
+    var name = nameInput.value.trim();
+    if (!name){ nameInput.focus(); toast("Please enter your name"); return; }
+    if (!selectedGroup){ toast("Please select your group"); return; }
+    STATE.profile = { name: name, group: selectedGroup };
+    save(LS.profile, STATE.profile);
+    loadAnswers();
+    $("#landing").style.display = "none";
+    $("#app").classList.add("on");
+    renderApp();
+  }
+  $("#startBtn").addEventListener("click", start);
+  nameInput.addEventListener("keydown", function(e){ if (e.key === "Enter") start(); });
+}
+
+function renderApp(){
+  $("#chipWho").textContent = STATE.profile.name;
+  $("#chipGroup").textContent = "Group " + STATE.profile.group;
+  renderSidebar();
+  var mb = $("#menuBtn");
+  if (window.matchMedia("(max-width:900px)").matches) mb.style.display = "flex";
+  mb.onclick = function(){ $("#sidebar").classList.toggle("open"); };
+  renderMain();
+}
+
+function renderSidebar(){
+  var unlockedCount = CASES.filter(function(c){ return isUnlocked(c.id); }).length;
+  var prog = $("#sbProgress");
+  if (prog){
+    prog.style.display = "flex";
+    $("#sbProgressTxt").textContent = unlockedCount + " of " + CASES.length + " unlocked";
+    $("#sbProgressBar").style.width = Math.round(unlockedCount / CASES.length * 100) + "%";
+  }
+  var list = $("#caseList");
+  list.innerHTML = CASES.map(function(c){
+    var unlocked = isUnlocked(c.id);
+    var active = STATE.current === c.id;
+    var answered = STATE.answers[c.id] && Object.keys(STATE.answers[c.id].steps || {}).some(function(k){ return (STATE.answers[c.id].steps[k] || "").trim(); });
+    var status = unlocked ? "Answers unlocked" : (answered ? "In progress" : "Not started");
+    return '<button class="case-item ' + (active?"active":"") + ' ' + (unlocked?"unlocked":"") + '" data-id="' + c.id + '">'
+      + '<span class="num">' + c.id + '</span>'
+      + '<span class="meta"><span class="t">' + esc(c.title) + '</span><span class="s">' + status + '</span></span>'
+      + '<span class="badge"></span></button>';
+  }).join("");
+  $$("#caseList .case-item").forEach(function(b){
+    b.addEventListener("click", function(){
+      STATE.current = parseInt(b.dataset.id, 10);
+      if (window.matchMedia("(max-width:900px)").matches) $("#sidebar").classList.remove("open");
+      renderSidebar();
+      renderMain();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  });
+}
+
+function gasGrid(obj){
+  var keys = Object.keys(obj);
+  return '<div class="gas-grid">' + keys.map(function(k){
+    return '<div class="gas-card"><div class="l">' + esc(k) + '</div><div class="v">' + esc(obj[k]) + '</div></div>';
+  }).join("") + '</div>';
+}
+
+var STEP_LABELS = [
+  "1. Clinical history","2. Internal validity","3. pH","4. Primary disorder",
+  "5. Expected compensation","6. Anion gap","7. Delta ratio","8. Oxygenation & integration"
+];
+var SID_ROWS = ["SID","Atot","Unmeasured anions","Mechanism"];
+
+function renderMain(){
+  var c = caseById(STATE.current);
+  if (!c) return;
+  var a = getCaseAnswer(c.id);
+  var unlocked = isUnlocked(c.id);
+  var html = '<div class="case-head">'
+    + '<div class="eyebrow">Case ' + c.id + ' of ' + CASES.length + '</div>'
+    + '<h1>' + esc(c.title) + '</h1>'
+    + '<div class="vignette"><b>Vignette.</b> ' + esc(c.vignette) + '</div></div>';
+  html += '<div class="section"><div class="section-head"><h2>Initial gas</h2><span class="tag">Presenting</span></div>'
+    + gasGrid(c.gas_in) + '</div>';
+  html += '<div class="section"><div class="section-head"><h2>Systematic interpretation</h2><span class="tag">Your working</span></div><div class="steps">';
+  STEP_LABELS.forEach(function(label, i){
+    var key = "s" + i;
+    var val = a.steps[key] || "";
+    html += '<div class="step"><div class="lbl">' + esc(label) + '</div>'
+      + '<textarea data-kind="steps" data-key="' + key + '" placeholder="Write your answer...">' + esc(val) + '</textarea></div>';
+  });
+  html += '</div></div>';
+  html += '<div class="section"><div class="section-head"><h2>SID / Stewart analysis</h2><span class="tag">Mechanism</span></div>'
+    + '<table class="sid-table"><thead><tr><th>Tool</th><th>Value</th><th>Your interpretation</th></tr></thead><tbody>';
+  SID_ROWS.forEach(function(tool, i){
+    var key = "sid" + i;
+    var val = a.sid[key] || "";
+    html += '<tr><td>' + esc(tool) + '</td><td></td>'
+      + '<td><textarea data-kind="sid" data-key="' + key + '" placeholder="Interpret...">' + esc(val) + '</textarea></td></tr>';
+  });
+  html += '</tbody></table></div>';
+  html += '<div class="section"><div class="section-head"><h2>Case-specific questions</h2><span class="tag">Answer in your own words</span></div>';
+  c.qs.forEach(function(q, i){
+    var key = "q" + i;
+    var val = a.qs[key] || "";
+    html += '<div class="qa"><div class="q"><span class="n">' + (i+1) + '.</span><span>' + esc(q) + '</span></div>'
+      + '<textarea data-kind="qs" data-key="' + key + '" placeholder="Your answer...">' + esc(val) + '</textarea></div>';
+  });
+  html += '</div>';
+  if (!unlocked){
+    html += '<div class="unlock-bar"><h3><span class="lockicon">LOCK</span> Answers locked</h3>'
+      + '<p>The moderator will read out a 4-character code when this case is over. Enter it below to reveal the discussion, learning points and take-home message.</p>'
+      + '<div class="unlock-row"><input id="codeInput" type="text" maxlength="4" autocomplete="off" spellcheck="false" placeholder="CODE">'
+      + '<button class="btn" id="unlockBtn">Unlock answers</button>'
+      + '<span class="unlock-err" id="unlockErr"></span></div></div>';
+  } else {
+    html += renderAnswerPanel(c);
+  }
+  $("#main").innerHTML = html;
+  $$("#main textarea").forEach(function(t){
+    t.addEventListener("input", function(){
+      var kind = t.dataset.kind;
+      var key = t.dataset.key;
+      if (!a[kind]) a[kind] = {};
+      a[kind][key] = t.value;
+      flashSaving();
+      clearTimeout(t._saveT);
+      t._saveT = setTimeout(function(){
+        persistAnswers();
+        flashSaved();
+        if (!isUnlocked(c.id)){
+          var el = document.querySelector('#caseList .case-item[data-id="' + c.id + '"] .s');
+          if (el){
+            var any = Object.keys(a.steps || {}).some(function(k){ return (a.steps[k] || "").trim(); });
+            el.textContent = any ? "In progress" : "Not started";
+          }
+        }
+      }, 400);
+    });
+  });
+  var codeInput = $("#codeInput");
+  if (codeInput){
+    var tryUnlock = function(){
+      var entered = codeInput.value.trim().toUpperCase();
+      var expected = unlockCode(c.id, STATE.seed);
+      if (entered === expected){
+        STATE.unlocked[c.id] = true;
+        save(LS.unlocked, STATE.unlocked);
+        toast("Answers unlocked");
+        renderSidebar();
+        renderMain();
+      } else {
+        $("#unlockErr").textContent = "Incorrect code - ask the moderator.";
+        codeInput.select();
+      }
+    };
+    $("#unlockBtn").addEventListener("click", tryUnlock);
+    codeInput.addEventListener("keydown", function(e){ if (e.key === "Enter") tryUnlock(); });
+    codeInput.addEventListener("input", function(){
+      codeInput.value = codeInput.value.toUpperCase().replace(/[^A-Z0-9]/g, "");
+      $("#unlockErr").textContent = "";
+    });
+    codeInput.focus();
+  }
+}
+
+function renderAnswerPanel(c){
+  var html = '<div class="answer-panel">'
+    + '<div class="answer-banner"><div class="icon">OK</div>'
+    + '<div><h3>Answers unlocked</h3><p>Model interpretation, discussion and learning points below.</p></div></div>';
+  html += '<div class="section"><div class="section-head"><h2>Model interpretation</h2><span class="tag">Faculty answer</span></div><div class="steps">';
+  c.steps_in.forEach(function(pair){
+    html += '<div class="step"><div class="lbl">' + esc(pair[0]) + '</div>'
+      + '<div class="model-answer">' + esc(pair[1]) + '</div></div>';
+  });
+  html += '</div></div>';
+  html += '<div class="section"><div class="section-head"><h2>SID / Stewart - model</h2></div>'
+    + '<table class="sid-table"><thead><tr><th>Tool</th><th>Value</th><th>Interpretation</th></tr></thead><tbody>';
+  c.sid_in.forEach(function(r){
+    html += '<tr><td>' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td><td>' + esc(r[2]) + '</td></tr>';
+  });
+  html += '</tbody></table></div>';
+  html += '<div class="section"><div class="section-head"><h2>Case-specific answers</h2></div>';
+  c.qs.forEach(function(q, i){
+    html += '<div class="qa"><div class="q"><span class="n">Q' + (i+1) + '.</span><span>' + esc(q) + '</span></div>'
+      + '<div class="model-answer">' + esc(c.ans[i]) + '</div></div>';
+  });
+  html += '</div>';
+  if (c.gas_post){
+    html += '<div class="section"><div class="section-head gold"><h2>Post-intervention</h2><span class="tag">Re-evaluate</span></div>'
+      + '<div class="post-card"><div class="ph">Intervention given</div>'
+      + '<div class="intervention">' + esc(c.intervention) + '</div>'
+      + '<div class="ph">Repeat gas</div>' + gasGrid(c.gas_post) + '</div>'
+      + '<div class="steps" style="margin-top:12px">';
+    c.steps_post.forEach(function(pair){
+      html += '<div class="step"><div class="lbl">' + esc(pair[0]) + '</div>'
+        + '<div class="model-answer">' + esc(pair[1]) + '</div></div>';
+    });
+    html += '</div>';
+    if (c.qs_post && c.ans_post){
+      html += '<div style="margin-top:16px">';
+      c.qs_post.forEach(function(q, i){
+        html += '<div class="qa"><div class="q"><span class="n">Q' + (i+1) + '.</span><span>' + esc(q) + '</span></div>'
+          + '<div class="model-answer">' + esc(c.ans_post[i]) + '</div></div>';
+      });
+      html += '</div>';
+    }
+    html += '</div>';
+  }
+  if (c.pitfalls && c.pitfalls.length){
+    html += '<div class="section"><div class="section-head"><h2>Where groups go wrong</h2></div>';
+    c.pitfalls.forEach(function(p){
+      html += '<div class="pitfall"><span class="bullet">*</span><span>' + esc(p) + '</span></div>';
+    });
+    html += '</div>';
+  }
+  if (c.synthesis){
+    html += '<div class="callout" style="margin-top:20px"><div class="lbl">Faculty synthesis</div>'
+      + '<div class="txt">' + esc(c.synthesis) + '</div></div>';
+  }
+  html += '<div class="callout" style="margin-top:12px"><div class="lbl">Take-home message</div>'
+    + '<div class="txt">' + esc(c.take) + '</div></div></div>';
+  return html;
+}
+
+function initModerator(mode){
+  mode = mode || "moderator";
+  document.getElementById("landing").style.display = "none";
+  document.getElementById("app").style.display = "none";
+  var modEl = document.getElementById("moderator");
+  modEl.classList.add("on");
+  if (mode === "faculty"){
+    modEl.classList.add("faculty-mode");
+    var banner = document.getElementById("facultyBanner");
+    if (banner) banner.style.display = "block";
+  }
+
+  var seedInput = $("#seed");
+  seedInput.value = STATE.seed;
+
+  var baseUrlInput = $("#baseUrl");
+  var stored = localStorage.getItem("abg:baseUrl");
+  if (stored){
+    baseUrlInput.value = stored;
+  } else {
+    // Smart default: if we're on localhost, try to detect LAN IP
+    var host = window.location.hostname;
+    if (host === "localhost" || host === "127.0.0.1" || host === "::1"){
+      detectLanIP().then(function(ip){
+        if (ip){
+          var url = "http://" + ip + ":" + (window.location.port || "8000") + "/";
+          baseUrlInput.value = url;
+          setParticipantUrl(url);
+          buildQRCode();
+          toast("Detected LAN IP: " + ip);
+        } else {
+          baseUrlInput.value = "http://YOUR-MAC-IP:8000/";
+          baseUrlInput.placeholder = "Enter http://YOUR-MAC-IP:8000/";
+        }
+      });
+    } else {
+      baseUrlInput.value = window.location.origin + window.location.pathname;
+    }
+  }
+  baseUrlInput.addEventListener("input", function(){
+    setParticipantUrl(baseUrlInput.value.trim());
+    buildQRCode();
+  });
+
+  function renderCodes(){
+    var seed = seedInput.value.trim() || SEED_DEFAULT;
+    STATE.seed = seed;
+    save(LS.seed, seed);
+    $("#codeGrid").innerHTML = CASES.map(function(c){
+      return '<button class="code-card" data-id="' + c.id + '">'
+        + '<div class="cid">Case ' + c.id + '</div>'
+        + '<div class="ct">' + esc(c.title) + '</div>'
+        + '<div class="cc">' + unlockCode(c.id, seed) + '</div></button>';
+    }).join("");
+    $$("#codeGrid .code-card").forEach(function(b){
+      b.addEventListener("click", function(){
+        $$("#codeGrid .code-card").forEach(function(x){ x.classList.remove("active"); });
+        b.classList.add("active");
+        var id = parseInt(b.dataset.id, 10);
+        var c = caseById(id);
+        $("#bigCode").textContent = unlockCode(id, seed);
+        $("#bigCodeLabel").textContent = "Case " + id + " - " + c.title;
+      });
+    });
+  }
+
+  seedInput.addEventListener("input", renderCodes);
+  renderCodes();
+
+  var first = document.querySelector('#codeGrid .code-card[data-id="1"]');
+  if (first) first.click();
+
+  if (mode === "faculty"){
+    switchModTab("cases");
+  }
+
+  // Copy link
+  $("#copyLink").addEventListener("click", function(){
+    var url = getParticipantUrl();
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(url).then(function(){ toast("Link copied"); }, function(){ toast(url); });
+    } else {
+      toast(url);
+    }
+  });
+
+  function copyRoleLink(param, label){
+    var base = getParticipantUrl();
+    var url = base + (base.indexOf("?") >= 0 ? "&" : "?") + param;
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(url).then(function(){ toast(label + " link copied"); }, function(){ toast(url); });
+    } else {
+      toast(url);
+    }
+  }
+  var cfl = $("#copyFacultyLink");
+  if (cfl) cfl.addEventListener("click", function(){ copyRoleLink("faculty=1", "Faculty"); });
+  var cml = $("#copyModLink");
+  if (cml) cml.addEventListener("click", function(){ copyRoleLink("mod=1", "Moderator"); });
+
+  // Refresh QR
+  var refreshBtn = $("#refreshQR");
+  if (refreshBtn){
+    refreshBtn.addEventListener("click", function(){
+      buildQRCode();
+      toast("QR refreshed");
+    });
+  }
+
+  // Tab switching
+  $$(".mod-tab").forEach(function(t){
+    t.addEventListener("click", function(){ switchModTab(t.dataset.tab); });
+  });
+
+  // Build QR and case walkthroughs
+  buildQRCode();
+  buildCaseWalkthroughs();
+}
+
+
+
+
+/* ===== MODERATOR ENHANCEMENTS ===== */
+
+function detectLanIP(){
+  return new Promise(function(resolve){
+    try{
+      var pc = new RTCPeerConnection({iceServers:[]});
+      pc.createDataChannel("");
+      var ips = {};
+      pc.onicecandidate = function(e){
+        if (!e || !e.candidate) { resolve(Object.keys(ips)[0] || null); return; }
+        var m = /([0-9]{1,3}(\.[0-9]{1,3}){3})/.exec(e.candidate.candidate);
+        if (m && !m[1].startsWith("127.") && !m[1].startsWith("169.254.")) ips[m[1]] = true;
+      };
+      pc.createOffer().then(function(o){ return pc.setLocalDescription(o); });
+      setTimeout(function(){ resolve(Object.keys(ips)[0] || null); }, 1200);
+    }catch(e){ resolve(null); }
+  });
+}
+
+function getParticipantUrl(){
+  var stored = localStorage.getItem("abg:baseUrl");
+  if (stored) return stored;
+  var el = document.getElementById("baseUrl");
+  if (el && el.value.trim()) return el.value.trim();
+  return window.location.origin + window.location.pathname;
+}
+
+function setParticipantUrl(url){
+  localStorage.setItem("abg:baseUrl", url);
+  var el = document.getElementById("baseUrl");
+  if (el) el.value = url;
+}
+
+function buildQRCode(){
+  var url = getParticipantUrl();
+  var el = document.getElementById("participantUrl");
+  if (el) el.textContent = url;
+  var img = document.getElementById("qrImg");
+  if (img){
+    img.src = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=8&data=" + encodeURIComponent(url);
+  }
+}
+
+function switchModTab(tabName){
+  var tabs = document.querySelectorAll(".mod-tab");
+  var panels = document.querySelectorAll(".mod-panel");
+  tabs.forEach(function(t){
+    t.classList.toggle("active", t.dataset.tab === tabName);
+  });
+  panels.forEach(function(p){
+    p.classList.toggle("active", p.id === "panel-" + tabName);
+  });
+}
+
+function buildCaseWalkthroughs(){
+  var host = document.getElementById("caseWalkthroughs");
+  if (!host) return;
+  if (host.dataset.built === "1") return;
+  host.dataset.built = "1";
+  host.innerHTML = CASES.map(function(c){
+    var html = '<div class="walkthrough-case" data-id="' + c.id + '">';
+    html += '<button class="wt-head" type="button">'
+      + '<span class="wt-num">' + c.id + '</span>'
+      + '<span class="wt-title">' + esc(c.title) + '</span>'
+      + '<span class="wt-arrow">&#9654;</span></button>';
+    html += '<div class="wt-body">';
+    html += '<div class="vignette" style="margin-bottom:14px"><b>Vignette.</b> ' + esc(c.vignette) + '</div>';
+    html += '<div class="section-head" style="border-color:var(--teal);margin-top:16px"><h2 style="color:var(--teal-dark)">Initial gas</h2></div>';
+    html += gasGrid(c.gas_in);
+    html += '<div class="section-head" style="border-color:var(--teal);margin-top:20px"><h2 style="color:var(--teal-dark)">Interpretation</h2></div>';
+    html += '<div class="steps">';
+    c.steps_in.forEach(function(p){
+      html += '<div class="step"><div class="lbl">' + esc(p[0]) + '</div><div class="model-answer">' + esc(p[1]) + '</div></div>';
+    });
+    html += '</div>';
+    html += '<div class="section-head" style="border-color:var(--teal);margin-top:20px"><h2 style="color:var(--teal-dark)">SID / Stewart</h2></div>';
+    html += '<table class="sid-table"><thead><tr><th>Tool</th><th>Value</th><th>Interpretation</th></tr></thead><tbody>';
+    c.sid_in.forEach(function(r){
+      html += '<tr><td>' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td><td>' + esc(r[2]) + '</td></tr>';
+    });
+    html += '</tbody></table>';
+    html += '<div class="section-head" style="border-color:var(--teal);margin-top:20px"><h2 style="color:var(--teal-dark)">Case-specific Q&amp;A</h2></div>';
+    c.qs.forEach(function(q, i){
+      html += '<div class="qa" style="margin-bottom:12px"><div class="q"><span class="n">Q' + (i+1) + '.</span><span>' + esc(q) + '</span></div>'
+        + '<div class="model-answer">' + esc(c.ans[i]) + '</div></div>';
+    });
+    if (c.gas_post){
+      html += '<div class="section-head gold" style="margin-top:20px"><h2>Post-intervention</h2></div>';
+      html += '<div class="post-card"><div class="ph">Intervention</div>'
+        + '<div class="intervention">' + esc(c.intervention) + '</div>'
+        + '<div class="ph">Repeat gas</div>' + gasGrid(c.gas_post) + '</div>';
+      html += '<div class="steps" style="margin-top:12px">';
+      c.steps_post.forEach(function(p){
+        html += '<div class="step"><div class="lbl">' + esc(p[0]) + '</div><div class="model-answer">' + esc(p[1]) + '</div></div>';
+      });
+      html += '</div>';
+      if (c.qs_post && c.ans_post){
+        html += '<div style="margin-top:14px">';
+        c.qs_post.forEach(function(q, i){
+          html += '<div class="qa" style="margin-bottom:12px"><div class="q"><span class="n">Q' + (i+1) + '.</span><span>' + esc(q) + '</span></div>'
+            + '<div class="model-answer">' + esc(c.ans_post[i]) + '</div></div>';
+        });
+        html += '</div>';
+      }
+    }
+    if (c.pitfalls && c.pitfalls.length){
+      html += '<div class="section-head" style="border-color:var(--warn);margin-top:20px"><h2 style="color:var(--warn)">Where groups go wrong</h2></div>';
+      c.pitfalls.forEach(function(p){
+        html += '<div class="pitfall"><span class="bullet">*</span><span>' + esc(p) + '</span></div>';
+      });
+    }
+    if (c.synthesis){
+      html += '<div class="callout" style="margin-top:16px"><div class="lbl">Faculty synthesis</div>'
+        + '<div class="txt">' + esc(c.synthesis) + '</div></div>';
+    }
+    html += '<div class="callout" style="margin-top:10px"><div class="lbl">Take-home</div>'
+      + '<div class="txt">' + esc(c.take) + '</div></div>';
+    html += '</div></div>';
+    return html;
+  }).join("");
+
+  host.querySelectorAll(".walkthrough-case .wt-head").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      btn.parentElement.classList.toggle("open");
+    });
+  });
+}
+
+
+/* ===== MODERATOR ENHANCEMENTS ===== */
+
+function getParticipantUrl(){
+  return window.location.origin + window.location.pathname;
+}
+
+function buildQRCode(){
+  var url = getParticipantUrl();
+  var el = document.getElementById("participantUrl");
+  if (el) el.textContent = url;
+  var img = document.getElementById("qrImg");
+  if (img){
+    img.src = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=8&data=" + encodeURIComponent(url);
+  }
+}
+
+function switchModTab(tabName){
+  var tabs = document.querySelectorAll(".mod-tab");
+  var panels = document.querySelectorAll(".mod-panel");
+  tabs.forEach(function(t){
+    t.classList.toggle("active", t.dataset.tab === tabName);
+  });
+  panels.forEach(function(p){
+    p.classList.toggle("active", p.id === "panel-" + tabName);
+  });
+}
+
+function buildCaseWalkthroughs(){
+  var host = document.getElementById("caseWalkthroughs");
+  if (!host) return;
+  if (host.dataset.built === "1") return;
+  host.dataset.built = "1";
+  host.innerHTML = CASES.map(function(c){
+    var html = '<div class="walkthrough-case" data-id="' + c.id + '">';
+    html += '<button class="wt-head" type="button">'
+      + '<span class="wt-num">' + c.id + '</span>'
+      + '<span class="wt-title">' + esc(c.title) + '</span>'
+      + '<span class="wt-arrow">&#9654;</span></button>';
+    html += '<div class="wt-body">';
+    html += '<div class="vignette" style="margin-bottom:14px"><b>Vignette.</b> ' + esc(c.vignette) + '</div>';
+    html += '<div class="section-head" style="border-color:var(--teal);margin-top:16px"><h2 style="color:var(--teal-dark)">Initial gas</h2></div>';
+    html += gasGrid(c.gas_in);
+    html += '<div class="section-head" style="border-color:var(--teal);margin-top:20px"><h2 style="color:var(--teal-dark)">Interpretation</h2></div>';
+    html += '<div class="steps">';
+    c.steps_in.forEach(function(p){
+      html += '<div class="step"><div class="lbl">' + esc(p[0]) + '</div><div class="model-answer">' + esc(p[1]) + '</div></div>';
+    });
+    html += '</div>';
+    html += '<div class="section-head" style="border-color:var(--teal);margin-top:20px"><h2 style="color:var(--teal-dark)">SID / Stewart</h2></div>';
+    html += '<table class="sid-table"><thead><tr><th>Tool</th><th>Value</th><th>Interpretation</th></tr></thead><tbody>';
+    c.sid_in.forEach(function(r){
+      html += '<tr><td>' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td><td>' + esc(r[2]) + '</td></tr>';
+    });
+    html += '</tbody></table>';
+    html += '<div class="section-head" style="border-color:var(--teal);margin-top:20px"><h2 style="color:var(--teal-dark)">Case-specific Q&amp;A</h2></div>';
+    c.qs.forEach(function(q, i){
+      html += '<div class="qa" style="margin-bottom:12px"><div class="q"><span class="n">Q' + (i+1) + '.</span><span>' + esc(q) + '</span></div>'
+        + '<div class="model-answer">' + esc(c.ans[i]) + '</div></div>';
+    });
+    if (c.gas_post){
+      html += '<div class="section-head gold" style="margin-top:20px"><h2>Post-intervention</h2></div>';
+      html += '<div class="post-card"><div class="ph">Intervention</div>'
+        + '<div class="intervention">' + esc(c.intervention) + '</div>'
+        + '<div class="ph">Repeat gas</div>' + gasGrid(c.gas_post) + '</div>';
+      html += '<div class="steps" style="margin-top:12px">';
+      c.steps_post.forEach(function(p){
+        html += '<div class="step"><div class="lbl">' + esc(p[0]) + '</div><div class="model-answer">' + esc(p[1]) + '</div></div>';
+      });
+      html += '</div>';
+      if (c.qs_post && c.ans_post){
+        html += '<div style="margin-top:14px">';
+        c.qs_post.forEach(function(q, i){
+          html += '<div class="qa" style="margin-bottom:12px"><div class="q"><span class="n">Q' + (i+1) + '.</span><span>' + esc(q) + '</span></div>'
+            + '<div class="model-answer">' + esc(c.ans_post[i]) + '</div></div>';
+        });
+        html += '</div>';
+      }
+    }
+    if (c.pitfalls && c.pitfalls.length){
+      html += '<div class="section-head" style="border-color:var(--warn);margin-top:20px"><h2 style="color:var(--warn)">Where groups go wrong</h2></div>';
+      c.pitfalls.forEach(function(p){
+        html += '<div class="pitfall"><span class="bullet">*</span><span>' + esc(p) + '</span></div>';
+      });
+    }
+    if (c.synthesis){
+      html += '<div class="callout" style="margin-top:16px"><div class="lbl">Faculty synthesis</div>'
+        + '<div class="txt">' + esc(c.synthesis) + '</div></div>';
+    }
+    html += '<div class="callout" style="margin-top:10px"><div class="lbl">Take-home</div>'
+      + '<div class="txt">' + esc(c.take) + '</div></div>';
+    html += '</div></div>';
+    return html;
+  }).join("");
+
+  host.querySelectorAll(".walkthrough-case .wt-head").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      btn.parentElement.classList.toggle("open");
+    });
+  });
+}
+
+(function boot(){
+  var params = new URLSearchParams(location.search);
+  if (params.get("mod") === "1" || location.hash === "#moderator"){
+    initModerator("moderator");
+    return;
+  }
+  if (params.get("faculty") === "1" || location.hash === "#faculty"){
+    initModerator("faculty");
+    return;
+  }
+  if (STATE.profile){
+    loadAnswers();
+    document.getElementById("landing").style.display = "none";
+    document.getElementById("app").classList.add("on");
+    renderApp();
+  } else {
+    initLanding();
+  }
+})();
+</script>
+</body>
+</html>
