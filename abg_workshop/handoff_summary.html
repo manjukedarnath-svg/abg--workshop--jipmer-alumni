@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ABG Workshop — Design Handoff</title>
+<style>
+:root{
+  --teal:#0F6E6E;--teal-d:#0A4E4E;--teal-s:#E6F1F1;
+  --navy:#1B2A3A;--gold:#B8892B;--gold-s:#FBF7EC;
+  --grey-l:#F4F6F8;--grey-m:#E1E6EB;--grey-t:#5A6672;
+}
+*{box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  color:var(--navy);background:#fff;margin:0;padding:32px 40px;font-size:12px;line-height:1.5;max-width:900px;margin:0 auto}
+.kick{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey-t);font-weight:600}
+h1{font-size:24px;margin:2px 0 4px;letter-spacing:-.01em}
+.sub{color:var(--grey-t);font-size:13px;margin:0 0 18px}
+hr{border:0;border-top:3px solid var(--teal);margin:0 0 20px}
+h2{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-d);
+  margin:24px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--grey-m)}
+h3{font-size:12px;margin:0 0 6px;font-weight:700}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.box{border:1px solid var(--grey-m);border-radius:8px;padding:12px;background:#fff}
+.box.tint{background:var(--grey-l)}
+.mini{border:1px solid var(--grey-m);border-radius:6px;padding:8px;background:var(--grey-l);height:130px;
+  display:flex;flex-direction:column;gap:4px;font-size:9.5px;color:var(--grey-t);overflow:hidden}
+.mini .row{height:8px;border-radius:3px;background:#fff;border:1px solid var(--grey-m)}
+.mini .row.teal{background:var(--teal);border-color:var(--teal);width:60%}
+.mini .row.gold{background:var(--gold);border-color:var(--gold);width:40%}
+.mini .row.short{width:50%}
+.mini .row.tiny{width:30%}
+.mini .row.tall{height:24px}
+.mini .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}
+.mini .grid3>div{height:18px;border-radius:3px;background:#fff;border:1px solid var(--grey-m)}
+.caption{font-size:10px;color:var(--grey-t);margin-top:6px}
+.flow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:8px 0}
+.flow .n{background:var(--teal);color:#fff;border-radius:50%;width:20px;height:20px;display:inline-flex;
+  align-items:center;justify-content:center;font-weight:700;font-size:10px;flex-shrink:0}
+.flow .lbl{background:var(--grey-l);border:1px solid var(--grey-m);border-radius:5px;padding:4px 8px;font-size:10.5px}
+.flow .arrow{color:var(--grey-t);font-weight:700}
+.swatch-row{display:flex;gap:6px;flex-wrap:wrap}
+.swatch{width:70px;text-align:center}
+.swatch .c{height:38px;border-radius:6px;border:1px solid var(--grey-m);margin-bottom:3px}
+.swatch .n{font-size:9px;color:var(--grey-t);font-weight:600}
+.swatch .h{font-size:8.5px;color:var(--grey-t);font-family:ui-monospace,Menlo,monospace}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:6px 8px;border-bottom:1px solid var(--grey-m);text-align:left;vertical-align:top}
+th{font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--teal-d);font-weight:700;
+  border-bottom:1px solid var(--teal-d)}
+td code{font-family:ui-monospace,Menlo,monospace;font-size:10px;background:var(--grey-l);padding:1px 4px;border-radius:3px}
+.note{background:var(--gold-s);border-left:3px solid var(--gold);padding:10px 12px;border-radius:0 6px 6px 0;font-size:11px}
+.foot{margin-top:30px;padding-top:12px;border-top:1px solid var(--grey-m);font-size:10px;color:var(--grey-t);
+  display:flex;justify-content:space-between}
+@media print{
+  body{padding:12mm;font-size:11px}
+  h2{page-break-after:avoid}
+  .box{page-break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<div class="kick">Paediatric Acute Care Teaching</div>
+<h1>ABG Interpretation Workshop — Design Handoff</h1>
+<p class="sub">13-case blood-gas teaching tool · single-file HTML app + 4 PDFs · live at stellar-griffin-9c37be.netlify.app</p>
+<hr>
+
+<h2>1 · Three views, one file</h2>
+<div class="grid-3">
+  <div>
+    <div class="box">
+      <h3>Participant</h3>
+      <div class="mini">
+        <div class="row teal"></div>
+        <div class="row short"></div>
+        <div class="grid3"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+        <div class="row tall"></div>
+        <div class="row tall"></div>
+        <div class="row short"></div>
+      </div>
+      <p class="caption"><b>Route:</b> <code>/</code><br>
+      Name + group → 13 cases. Fill interpretation, SID, case Qs. Autosave. Locked until moderator reads code.</p>
+    </div>
+  </div>
+  <div>
+    <div class="box">
+      <h3>Faculty</h3>
+      <div class="mini">
+        <div class="row gold"></div>
+        <div class="row teal"></div>
+        <div class="row"></div>
+        <div class="row tall"></div>
+        <div class="row tall"></div>
+      </div>
+      <p class="caption"><b>Route:</b> <code>/?faculty=1</code><br>
+      Gold banner + two tabs (Cases &amp; Answers · Cheat Sheet). No codes. Each case expands to full walkthrough.</p>
+    </div>
+  </div>
+  <div>
+    <div class="box">
+      <h3>Moderator</h3>
+      <div class="mini">
+        <div class="row teal"></div>
+        <div class="row"></div>
+        <div class="grid3"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+      </div>
+      <p class="caption"><b>Route:</b> <code>/?mod=1</code><br>
+      Three tabs. Codes &amp; QR tab shows big 4-char code + join QR. Plus Cases &amp; Answers and Cheat Sheet.</p>
+    </div>
+  </div>
+</div>
+
+<h2>2 · Live session flow</h2>
+<div class="flow">
+  <span class="n">1</span><span class="lbl">All 13 cases distributed (8 min settling)</span>
+  <span class="arrow">→</span>
+  <span class="n">2</span><span class="lbl">Small group: 3 interpret · 3 discuss · 2 synthesise</span>
+  <span class="arrow">→</span>
+  <span class="n">3</span><span class="lbl">Plenary: moderator reveals code</span>
+  <span class="arrow">→</span>
+  <span class="n">4</span><span class="lbl">Participants unlock answers on phone</span>
+  <span class="arrow">→</span>
+  <span class="n">5</span><span class="lbl">Expert comment · take-home · next case</span>
+</div>
+<p class="caption" style="margin:2px 0 0">13 cases × 15 min ≈ 3.25 hrs · or select 8 for 2 hrs.</p>
+
+<h2>3 · Design tokens</h2>
+<div class="swatch-row">
+  <div class="swatch"><div class="c" style="background:#0F6E6E"></div><div class="n">teal</div><div class="h">#0F6E6E</div></div>
+  <div class="swatch"><div class="c" style="background:#0A4E4E"></div><div class="n">teal-dark</div><div class="h">#0A4E4E</div></div>
+  <div class="swatch"><div class="c" style="background:#E6F1F1"></div><div class="n">teal-soft</div><div class="h">#E6F1F1</div></div>
+  <div class="swatch"><div class="c" style="background:#1B2A3A"></div><div class="n">navy</div><div class="h">#1B2A3A</div></div>
+  <div class="swatch"><div class="c" style="background:#B8892B"></div><div class="n">gold</div><div class="h">#B8892B</div></div>
+  <div class="swatch"><div class="c" style="background:#FBF7EC"></div><div class="n">gold-soft</div><div class="h">#FBF7EC</div></div>
+  <div class="swatch"><div class="c" style="background:#F4F6F8"></div><div class="n">grey-l</div><div class="h">#F4F6F8</div></div>
+  <div class="swatch"><div class="c" style="background:#E1E6EB"></div><div class="n">grey-m</div><div class="h">#E1E6EB</div></div>
+  <div class="swatch"><div class="c" style="background:#5A6672"></div><div class="n">grey-t</div><div class="h">#5A6672</div></div>
+</div>
+
+<table style="margin-top:12px">
+  <tr><th style="width:22%">Token</th><th>Value</th><th style="width:40%">Notes</th></tr>
+  <tr><td>Body font</td><td>15px, line-height 1.55</td><td>-apple-system stack</td></tr>
+  <tr><td>Textarea font</td><td>16px mobile, 14px desktop</td><td>16px prevents iOS zoom</td></tr>
+  <tr><td>Radii</td><td>6–12px</td><td>7px inputs, 10–12px cards</td></tr>
+  <tr><td>Shadow</td><td>0 1px 3px rgba(15,30,40,.06)</td><td>Subtle, one level</td></tr>
+  <tr><td>Spacing unit</td><td>4px</td><td>Used 4/6/8/12/16/20/24/32</td></tr>
+</table>
+
+<h2>4 · Component inventory</h2>
+<table>
+  <tr><th style="width:24%">Component</th><th>Where used</th><th style="width:30%">States</th></tr>
+  <tr><td>Gas card</td><td>Label over value in bordered grid</td><td>Default only</td></tr>
+  <tr><td>Interpretation row</td><td>Step label + textarea</td><td>Empty, filled, focused</td></tr>
+  <tr><td>SID table</td><td>3-column: tool, value, interpretation</td><td>Editable, revealed</td></tr>
+  <tr><td>Case-specific Q &amp; A</td><td>Question + answer block</td><td>Input, model answer</td></tr>
+  <tr><td>Unlock bar</td><td>4-char code input + button</td><td>Locked, wrong code, unlocked</td></tr>
+  <tr><td>Answer panel</td><td>Model answers after unlock</td><td>Revealed</td></tr>
+  <tr><td>Post-intervention card</td><td>Gold-tinted, repeat gas + steps</td><td>Revealed</td></tr>
+  <tr><td>Sidebar case item</td><td>Number + title + status</td><td>Not started, in progress, unlocked, active</td></tr>
+  <tr><td>Moderator tab bar</td><td>3 tabs (or 2 for faculty)</td><td>Active, inactive</td></tr>
+  <tr><td>QR block</td><td>Image + URL + buttons</td><td>Default</td></tr>
+  <tr><td>Collapsible case</td><td>Used in faculty walkthrough</td><td>Closed, open</td></tr>
+  <tr><td>Cheat sheet table</td><td>Formulas, patterns, pitfalls</td><td>Static</td></tr>
+</table>
+
+<h2>5 · Data shape — one case</h2>
+<div class="box tint">
+<pre style="margin:0;font-size:10px;line-height:1.5;font-family:ui-monospace,Menlo,monospace;white-space:pre-wrap">{ id: 1, title: "DKA",
+  vignette: "...",
+  gas_in:    { pH, PaCO2, HCO3, PaO2, Na, K, Cl, Albumin, Glucose, b-OHB },
+  steps_in:  [["1. Clinical history","..."], ...8 rows],
+  sid_in:    [["SID","132 - 98 = 34","Low-normal..."], ...4 rows],
+  intervention: "...",
+  gas_post:  { ...same keys as gas_in... },
+  steps_post:[...],
+  qs: ["Calculate corrected sodium.", ...],
+  ans:["..."], qs_post:[...], ans_post:[...],
+  pitfalls:["..."], synthesis:"...", take:"..." }</pre>
+</div>
+
+<h2>6 · What works today</h2>
+<div class="grid-2">
+  <div class="box">
+    <h3 style="color:#1F7A4D">✓ Working</h3>
+    <ul style="margin:6px 0 0 16px;padding:0">
+      <li>All 13 cases in all 3 views</li>
+      <li>Deterministic 4-char unlock codes (FNV-1a)</li>
+      <li>LocalStorage autosave, per group</li>
+      <li>Mobile-first single-column layout, bottom-sheet nav</li>
+      <li>Faculty view hides codes tab</li>
+      <li>QR auto-generation from moderator URL</li>
+      <li>4 PDFs generated from same data</li>
+    </ul>
+  </div>
+  <div class="box">
+    <h3 style="color:#B23A3A">Gaps · improvement ideas</h3>
+    <ul style="margin:6px 0 0 16px;padding:0">
+      <li>No cross-device sync (each phone isolated)</li>
+      <li>No live analytics for moderator</li>
+      <li>QR relies on external service (offline breaks)</li>
+      <li>No per-case timer visible</li>
+      <li>No &ldquo;reset my answers&rdquo; in participant view</li>
+      <li>No exit-ticket summary screen</li>
+      <li>Case data embedded — hard for non-devs to edit</li>
+      <li>ARIA / keyboard nav on mobile nav is minimal</li>
+    </ul>
+  </div>
+</div>
+
+<h2>7 · Questions for the designer</h2>
+<div class="note">
+  <b>Product:</b> should participants see a peer-comparison view (how did my group answer vs others) after unlock?<br>
+  <b>Visual:</b> how to unify the print PDFs with the web app so they feel like one product?<br>
+  <b>Flow:</b> should the moderator be able to broadcast the case switch to all participants?<br>
+  <b>Content:</b> what's the clearest way to show a &ldquo;persistently low HCO₃⁻ = the acid has changed character&rdquo; teaching moment?<br>
+  <b>Motion:</b> does the unlock reveal want a specific animation (rather than instant)?<br>
+  <b>Accessibility:</b> WCAG AA pass — focus rings, contrast on gold-soft, screen reader labels.
+</div>
+
+<div class="foot">
+  <span>Handoff document · v1 · generated from live app</span>
+  <span>stellar-griffin-9c37be.netlify.app</span>
+</div>
+
+</body>
+</html>
