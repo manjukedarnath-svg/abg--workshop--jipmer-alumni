@@ -334,6 +334,33 @@ box-shadow:0 8px 30px rgba(15,30,40,.1)}
 }
 .faculty-banner strong{color:var(--gold)}
 
+
+.landing-instructions{
+  margin:22px 0 26px;
+  border:1px solid var(--grey-m);
+  border-radius:12px;
+  padding:16px 18px 14px;
+  background:var(--grey-l);
+}
+.landing-instructions .li-title{
+  font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--teal-dark);margin:0 0 10px;
+}
+.landing-steps{display:flex;flex-direction:column;gap:10px}
+.landing-step{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.45;color:var(--navy)}
+.landing-step .n{
+  min-width:22px;height:22px;border-radius:50%;background:var(--teal);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;
+  flex-shrink:0;margin-top:1px;
+}
+.landing-step b{color:var(--navy)}
+.landing-step .hint{color:var(--grey-t)}
+@media(max-width:640px){
+  .landing-instructions{padding:14px 14px 12px}
+  .landing-step{font-size:12.5px}
+  .landing-step .n{min-width:20px;height:20px;font-size:10.5px}
+}
+
 </style>
 </head>
 <body>
@@ -341,7 +368,7 @@ box-shadow:0 8px 30px rgba(15,30,40,.1)}
   <div class="card">
     <div class="kick">Paediatric Acute Care Teaching</div>
     <h1>ABG Interpretation Workshop</h1>
-    <p class="sub">Live participant app - 13 cases - interpret, intervene, re-evaluate</p>
+    <p class="sub">Live participant app - 13 cases - 8 drawn live</p>
     <div class="rule"></div>
     <div class="field">
       <label for="pname">Your name</label>
@@ -358,7 +385,7 @@ box-shadow:0 8px 30px rgba(15,30,40,.1)}
     </div>
     <button class="btn block" id="startBtn" style="margin-top:22px">Start the workshop</button>
     <p style="text-align:center;color:var(--grey-t);font-size:12px;margin-top:14px">
-      Answers autosave on this device. You can return any time.
+      Your answers stay on your phone. No login required.
     </p>
   </div>
 </div>
@@ -387,10 +414,10 @@ box-shadow:0 8px 30px rgba(15,30,40,.1)}
       <div class="kick" style="text-align:left">Moderator & Faculty Console</div>
       <h1 style="margin:0 0 6px;font-size:22px">ABG Workshop Control</h1>
       <p style="color:var(--grey-t);font-size:13.5px;margin:0 0 18px">
-        Unlock codes, case walkthroughs, and quick reference - all in one place.
+        Unlock codes, case walkthroughs, and quick reference - all in one place.<br><span style="font-size:12.5px">13 cases in the booklet. Draw 8 at the start of the session for the live run.</span>
       </p>
 
-      <div class="faculty-banner" id="facultyBanner" style="display:none"><strong>Faculty view.</strong> 3 min interpret &middot; 3 min discuss &middot; 2 min synthesise. Tap any case below to expand the full walkthrough.</div>
+      <div class="faculty-banner" id="facultyBanner" style="display:none"><strong>Faculty view.</strong> 13 cases in the booklet &middot; 8 drawn live &middot; 3 min interpret &middot; 3 min discuss &middot; 2 min synthesise. Tap any case below to expand the full walkthrough.</div>
       <div class="mod-tabs">
         <button class="mod-tab active" data-tab="codes">Codes &amp; QR</button>
         <button class="mod-tab" data-tab="cases">Cases &amp; Answers</button>
@@ -1337,14 +1364,14 @@ function setParticipantUrl(url){
 
 /* ===== FACULTY ALLOCATION ===== */
 var FACULTY_ALLOCATION = [
-  {group:"1", name:"Manju Kedarnath"},
-  {group:"2", name:"Shilpa"},
-  {group:"3", name:"Namitha"},
-  {group:"4", name:"Sivamurukan"},
-  {group:"5", name:"Nikhil"},
-  {group:"6", name:"Rohit"},
-  {group:"7", name:"Balachandar"},
-  {group:"8", name:"Dipu / Sreedeep"}
+  {group:"1", name:"Manju",           caseNum:3, dx:"AGE (Gastroenteritis)"},
+  {group:"2", name:"Shilpa",          caseNum:6, dx:"Hanging (Post-arrest)"},
+  {group:"3", name:"Namitha",         caseNum:9, dx:"Encephalopathy (Two neonates)"},
+  {group:"4", name:"Sivamurukan",     caseNum:8, dx:"Methaemoglobinaemia"},
+  {group:"5", name:"Nikhil",          caseNum:5, dx:"Salicylate poisoning"},
+  {group:"6", name:"Rohit",           caseNum:7, dx:"Septic shock + severe anaemia"},
+  {group:"7", name:"Balachandar",     caseNum:4, dx:"Suspected IEM"},
+  {group:"8", name:"Dipu / Sreedeep", caseNum:2, dx:"Pyloric stenosis"}
 ];
 
 function renderFacultyBlock(){
@@ -1352,9 +1379,17 @@ function renderFacultyBlock(){
   if (!host) return;
   var html = '<div class="cheat-section" style="margin-bottom:24px">';
   html += '<h3>Faculty allocation by group</h3>';
-  html += '<table><thead><tr><th style="width:22%">Group</th><th>Faculty facilitator</th></tr></thead><tbody>';
+  html += '<p style="color:var(--grey-t);font-size:12.5px;margin:0 0 10px"><b>Moderator:</b> Dr Narayanan and Dr Manju Kedarnath</p>';
+  html += '<table><thead><tr>'
+        + '<th style="width:12%">Group</th>'
+        + '<th style="width:26%">Faculty</th>'
+        + '<th style="width:14%">Case</th>'
+        + '<th>Diagnosis</th></tr></thead><tbody>';
   FACULTY_ALLOCATION.forEach(function(f){
-    html += '<tr><td>Group ' + f.group + '</td><td>' + f.name + '</td></tr>';
+    html += '<tr><td>Group ' + f.group + '</td>'
+          + '<td>' + f.name + '</td>'
+          + '<td><b>Case ' + f.caseNum + '</b></td>'
+          + '<td>' + f.dx + '</td></tr>';
   });
   html += '</tbody></table></div>';
   host.innerHTML = html;
