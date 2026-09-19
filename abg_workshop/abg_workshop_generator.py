@@ -459,6 +459,19 @@ CASES.append({"id":13,"title":"Shocked 2-week-old boy",
  "synthesis":"Neonatal shock + NAGMA + hyperkalaemia + hyponatraemia = CAH until proven otherwise. Draw the sample before steroids.",
  "take":"Neonatal shock + NAGMA + hyperkalaemia + hyponatraemia = CAH until proven otherwise. SID confirms the chloride-driven mechanism and tracks response to therapy."})
 
+
+# Group -> Faculty facilitator allocation
+GROUP_FACULTY = [
+    ("1", "Manju",           3, "AGE (Gastroenteritis)"),
+    ("2", "Shilpa",          6, "Hanging (Post-arrest)"),
+    ("3", "Namitha",         9, "Encephalopathy (Two neonates)"),
+    ("4", "Sivamurukan",     8, "Methaemoglobinaemia"),
+    ("5", "Nikhil",          5, "Salicylate poisoning"),
+    ("6", "Rohit",           7, "Septic shock + severe anaemia"),
+    ("7", "Balachandar",     4, "Suspected IEM"),
+    ("8", "Dipu / Sreedeep", 2, "Pyloric stenosis"),
+]
+
 def qblk(qs,ans=None,tq="Case-specific questions",ta="Answers"):
     r=[Paragraph(tq,ST["h3"])]
     for i,q in enumerate(qs,1): r.append(Paragraph("<b>"+str(i)+".</b> "+q,ST["b"]))
@@ -498,7 +511,7 @@ def flow():
 def build_q():
     p=OUT+"/1_Participant_Question_Booklet.pdf"
     d=doc(p,"Participant Question Booklet")
-    s=hdr("PAEDIATRIC ACUTE CARE TEACHING","ABG Interpretation Workshop","Participant Question Booklet - 13 Cases")
+    s=hdr("PAEDIATRIC ACUTE CARE TEACHING","ABG Interpretation Workshop","Participant Question Booklet - 13 cases, 8 drawn live")
     s.append(Paragraph("How this session runs",ST["h1"]))
     s.append(Paragraph("You have all 13 cases in this booklet. Read them during the 8-minute settling period. Each case then runs as one 15-minute unit in two phases:",ST["b"]))
     s.append(flow())
@@ -525,7 +538,7 @@ def build_q():
 def build_a():
     p=OUT+"/2_Participant_Answer_Booklet.pdf"
     d=doc(p,"Participant Answer Booklet")
-    s=hdr("PAEDIATRIC ACUTE CARE TEACHING","ABG Interpretation Workshop","Participant Discussion and Answer Booklet - 13 Cases")
+    s=hdr("PAEDIATRIC ACUTE CARE TEACHING","ABG Interpretation Workshop","Participant Discussion and Answer Booklet - 13 cases, 8 drawn live")
     s.append(Paragraph("The Unified 10-Step Approach",ST["h1"]))
     s.append(tensteps())
     for c in CASES:
@@ -566,6 +579,32 @@ def build_f():
     s.append(Spacer(1,6))
     s.append(Paragraph("<b>Timing discipline:</b> hold the 3-3-2 boundary. Resist answering in the first 3 minutes. If the group finishes early, ask a what-if variant.",ST["b"]))
     s.append(Paragraph("<b>Case 1 twist:</b> small-group phase works presenting gas only; moderator reveals the 14-hour repeat gas in plenary.",ST["b"]))
+
+    s.append(Paragraph("Faculty allocation by group",ST["h1"]))
+    s.append(Paragraph("<b>Moderator:</b> Dr Narayanan and Dr Manju Kedarnath",ST["b"]))
+    fac_rows = [[Paragraph("Group",ST["cl"]), Paragraph("Faculty facilitator",ST["cl"]),
+                 Paragraph("Case",ST["cl"]), Paragraph("Diagnosis",ST["cl"])]]
+    for g, n, cn, dx in GROUP_FACULTY:
+        fac_rows.append([Paragraph(g, ST["cb"]),
+                         Paragraph(n, ST["c"]),
+                         Paragraph(str(cn), ST["cb"]),
+                         Paragraph(dx, ST["c"])])
+    fac_t = Table(fac_rows, colWidths=[18*mm, 48*mm, 18*mm, 86*mm], repeatRows=1)
+    fac_t.setStyle(TableStyle([
+        ("BACKGROUND",(0,0),(-1,0), TEAL),
+        ("TEXTCOLOR",(0,0),(-1,0), colors.white),
+        ("BACKGROUND",(0,1),(0,-1), GREY_L),
+        ("BACKGROUND",(2,1),(2,-1), GREY_L),
+        ("BOX",(0,0),(-1,-1),0.6, GREY_M),
+        ("INNERGRID",(0,0),(-1,-1),0.4, GREY_M),
+        ("VALIGN",(0,0),(-1,-1),"MIDDLE"),
+        ("LEFTPADDING",(0,0),(-1,-1),5),
+        ("RIGHTPADDING",(0,0),(-1,-1),5),
+        ("TOPPADDING",(0,0),(-1,-1),5),
+        ("BOTTOMPADDING",(0,0),(-1,-1),5),
+    ]))
+    s.append(fac_t)
+
     s.append(PageBreak())
     s.append(Paragraph("Quick Answer Index - all 13 cases",ST["h1"]))
     rows=[[Paragraph("#",ST["cl"]),Paragraph("Diagnosis",ST["cl"]),Paragraph("Moderator take-home",ST["cl"])]]

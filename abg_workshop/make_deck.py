@@ -120,7 +120,7 @@ add_text(s, Inches(1), Inches(4.3), Inches(11.3), Inches(0.5),
          align=PP_ALIGN.CENTER)
 add_rect(s, Inches(5.5), Inches(5.1), Inches(2.33), Inches(0.05), TEAL)
 add_text(s, Inches(1), Inches(5.4), Inches(11.3), Inches(0.4),
-         "13 cases · 15 min per case · ~3.25 hours total",
+         "13 cases in the booklet  ·  8 drawn live at the start  ·  15 min per case",
          size=13, color=GREY_L, align=PP_ALIGN.CENTER)
 
 # ── Slide 2: How today runs ──
@@ -210,6 +210,33 @@ for col, (title, items, colour) in enumerate([
         add_text(s, x + Inches(0.35), y + Inches(0.4), Inches(5.5), Inches(0.8),
                  b, size=11, color=GREY_T, spacing=1.35)
         y += Inches(1.2)
+
+
+# ── Slide 5: Faculty allocation ──
+s = new_slide()
+header(s, "Faculty allocation", "Group → Faculty facilitator", "")
+FACULTY_ALLOC = [
+    ("1","Manju Kedarnath"),("2","Shilpa"),("3","Namitha"),("4","Sivamurukan"),
+    ("5","Nikhil"),("6","Rohit"),("7","Balachandar"),("8","Dipu / Sreedeep"),
+]
+y0 = Inches(2.4)
+row_h = Inches(0.62)
+col_w = Inches(5.9)
+gap = Inches(0.2)
+for i, (g, n) in enumerate(FACULTY_ALLOC):
+    col = i // 4
+    row = i % 4
+    x = Inches(0.6) + col * (col_w + gap)
+    y = y0 + row * row_h
+    add_rect(s, x, y, Inches(1.3), row_h - Inches(0.08), TEAL)
+    add_text(s, x, y, Inches(1.3), row_h - Inches(0.08),
+             "GROUP " + g, size=12, color=WHITE, bold=True,
+             align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    add_rect(s, x + Inches(1.3), y, col_w - Inches(1.3), row_h - Inches(0.08),
+             GREY_L, GREY_M)
+    add_text(s, x + Inches(1.5), y, col_w - Inches(1.6), row_h - Inches(0.08),
+             n, size=14, color=NAVY,
+             align=PP_ALIGN.LEFT, anchor=MSO_ANCHOR.MIDDLE)
 
 # ── Case slides ──
 for c in CASES:

@@ -48,8 +48,12 @@ background:var(--grey-l);font-weight:600;transition:all .15s}
 .grid4 button.active{background:var(--teal);color:#fff;border-color:var(--teal)}
 #app{display:none;min-height:100dvh;flex-direction:column}
 #app.on{display:flex}
+.menu-fab{width:38px;height:38px;border-radius:10px;background:var(--grey-l);border:1px solid var(--grey-m);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.menu-fab span,.menu-fab span::before,.menu-fab span::after{content:'';display:block;width:16px;height:2px;background:var(--navy);border-radius:2px;position:relative;transition:transform .2s}
+.menu-fab span::before{position:absolute;top:-5px}
+.menu-fab span::after{position:absolute;top:5px}
 .topbar{position:sticky;top:0;z-index:40;background:#fff;border-bottom:1px solid var(--grey-m);
-display:flex;align-items:center;gap:14px;padding:10px 18px}
+display:flex;align-items:center;gap:14px;padding:calc(10px + env(safe-area-inset-top)) 18px 10px}
 .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px}
 .brand .dot{width:9px;height:9px;border-radius:50%;background:var(--teal)}
 .topbar .who{margin-left:auto;display:flex;align-items:center;gap:12px;font-size:12.5px;
@@ -66,7 +70,10 @@ position:sticky;top:57px;align-self:start;max-height:calc(100dvh - 57px);overflo
 @media(max-width:900px){.sidebar{position:fixed;inset:57px 0 auto 0;z-index:30;max-height:60dvh;
 transform:translateY(-110%);transition:transform .22s;border-right:none;
 border-bottom:1px solid var(--grey-m)}
-.sidebar.open{transform:translateY(0)}}
+.sidebar.open{transform:translateY(0)}
+.sb-progress{display:flex;align-items:center;gap:8px;margin:0 4px 12px;font-size:11.5px;color:var(--grey-t);font-weight:600}
+.sb-progress .bar{flex:1;height:5px;border-radius:3px;background:var(--grey-m);overflow:hidden}
+.sb-progress .bar i{display:block;height:100%;background:var(--teal);border-radius:3px}}
 .sb-title{font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--grey-t);
 text-transform:uppercase;margin:0 4px 10px}
 .case-list{display:flex;flex-direction:column;gap:3px}
@@ -198,6 +205,7 @@ box-shadow:0 8px 30px rgba(15,30,40,.1)}
 /* ===== MOBILE-FIRST PATCH ===== */
 @media(max-width:640px){
   body{font-size:15px}
+  html{-webkit-tap-highlight-color:transparent}
   .card{padding:24px 20px;border-radius:14px}
   .card h1{font-size:22px}
   .kick{font-size:10px}
@@ -206,7 +214,7 @@ box-shadow:0 8px 30px rgba(15,30,40,.1)}
   .topbar .who{gap:6px;font-size:11.5px}
   .topbar .who .chip{padding:3px 8px;font-size:10.5px}
   .autosave{font-size:10.5px}
-  .main{padding:16px 14px 110px;max-width:100%}
+  .main{padding:16px 14px calc(90px + env(safe-area-inset-bottom));max-width:100%}
   .case-head h1{font-size:21px;letter-spacing:-.02em}
   .case-head .eyebrow{font-size:10px}
   .vignette{font-size:14px;padding:12px 14px;line-height:1.5}
@@ -214,10 +222,10 @@ box-shadow:0 8px 30px rgba(15,30,40,.1)}
   .section-head{padding-bottom:5px;margin-bottom:10px}
   .section-head h2{font-size:12px;letter-spacing:.06em}
   .section-head .tag{font-size:10px}
-  .gas-grid{grid-template-columns:repeat(3,1fr);gap:6px}
-  .gas-card{padding:7px 4px 8px;border-radius:6px}
+  .gas-grid{grid-template-columns:repeat(3,1fr);gap:8px}
+  .gas-card{padding:10px 4px 11px;border-radius:9px;min-height:56px;display:flex;flex-direction:column;justify-content:center}
   .gas-card .l{font-size:9.5px;letter-spacing:0;line-height:1.15}
-  .gas-card .v{font-size:17px;margin-top:2px}
+  .gas-card .v{font-size:18px;margin-top:3px}
   .steps{gap:10px}
   .step{grid-template-columns:1fr;gap:6px;padding:11px 12px;border-radius:7px}
   .step .lbl{font-size:12.5px;padding-top:0;line-height:1.35}
@@ -253,6 +261,8 @@ box-shadow:0 8px 30px rgba(15,30,40,.1)}
   .post-card .ph{font-size:10.5px}
   .post-card .intervention{font-size:13px}
   .mod-card{padding:18px 16px;border-radius:12px}
+  #moderator{padding:14px 10px calc(24px + env(safe-area-inset-bottom))}
+  .faculty-banner{padding:11px 13px;font-size:12.5px;line-height:1.5}
   .mod-tabs{padding:3px;border-radius:9px;gap:3px}
   .mod-tab{padding:9px 12px;font-size:13px}
   .big-code{font-size:48px;padding:20px 0;letter-spacing:.18em;border-radius:12px}
@@ -284,7 +294,7 @@ box-shadow:0 8px 30px rgba(15,30,40,.1)}
     content:'';display:block;width:40px;height:4px;border-radius:2px;
     background:var(--grey-m);margin:0 auto 12px;
   }
-  .case-item{padding:11px 12px;border-radius:8px}
+  .case-item{padding:13px 12px;border-radius:9px;min-height:44px}
   .case-item .num{min-width:28px;height:28px;font-size:12.5px}
   .case-item .t{font-size:14px}
   .case-item .s{font-size:11.5px}
@@ -331,7 +341,7 @@ box-shadow:0 8px 30px rgba(15,30,40,.1)}
   <div class="card">
     <div class="kick">Paediatric Acute Care Teaching</div>
     <h1>ABG Interpretation Workshop</h1>
-    <p class="sub">Live participant app - 13 cases - interpret, intervene, re-evaluate</p>
+    <p class="sub">Live participant app - 13 cases - 8 drawn live</p>
     <div class="rule"></div>
     <div class="field">
       <label for="pname">Your name</label>
@@ -354,7 +364,7 @@ box-shadow:0 8px 30px rgba(15,30,40,.1)}
 </div>
 <div id="app">
   <header class="topbar">
-    <button class="btn ghost sm" id="menuBtn" style="display:none">Menu</button>
+    <button class="menu-fab" id="menuBtn" style="display:none" aria-label="Toggle case menu"><span></span></button>
     <div class="brand"><span class="dot"></span> ABG Workshop</div>
     <div class="who">
       <span class="chip navy" id="chipWho">-</span>
@@ -365,6 +375,7 @@ box-shadow:0 8px 30px rgba(15,30,40,.1)}
   <div class="layout">
     <aside class="sidebar" id="sidebar">
       <div class="sb-title">Cases</div>
+      <div class="sb-progress" id="sbProgress" style="display:none"><span id="sbProgressTxt">0 of 13 unlocked</span><span class="bar"><i id="sbProgressBar" style="width:0%"></i></span></div>
       <div class="case-list" id="caseList"></div>
     </aside>
     <main class="main" id="main"></main>
@@ -376,10 +387,10 @@ box-shadow:0 8px 30px rgba(15,30,40,.1)}
       <div class="kick" style="text-align:left">Moderator & Faculty Console</div>
       <h1 style="margin:0 0 6px;font-size:22px">ABG Workshop Control</h1>
       <p style="color:var(--grey-t);font-size:13.5px;margin:0 0 18px">
-        Unlock codes, case walkthroughs, and quick reference - all in one place.
+        Unlock codes, case walkthroughs, and quick reference - all in one place.<br><span style="font-size:12.5px">13 cases in the booklet. Draw 8 at the start of the session for the live run.</span>
       </p>
 
-      <div class="faculty-banner" id="facultyBanner" style="display:none"><strong>Faculty view.</strong> 3 min interpret &middot; 3 min discuss &middot; 2 min synthesise. Tap any case below to expand the full walkthrough.</div>
+      <div class="faculty-banner" id="facultyBanner" style="display:none"><strong>Faculty view.</strong> 13 cases in the booklet &middot; 8 drawn live &middot; 3 min interpret &middot; 3 min discuss &middot; 2 min synthesise. Tap any case below to expand the full walkthrough.</div>
       <div class="mod-tabs">
         <button class="mod-tab active" data-tab="codes">Codes &amp; QR</button>
         <button class="mod-tab" data-tab="cases">Cases &amp; Answers</button>
@@ -407,9 +418,12 @@ box-shadow:0 8px 30px rgba(15,30,40,.1)}
             </p>
             <div class="url" id="participantUrl">-</div>
             <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
-              <button class="btn sm" id="copyLink">Copy link</button>
+              <button class="btn sm" id="copyLink">Copy participant link</button>
+              <button class="btn ghost sm" id="copyFacultyLink">Copy faculty link</button>
+              <button class="btn ghost sm" id="copyModLink">Copy moderator link</button>
               <button class="btn ghost sm" id="refreshQR">Refresh QR</button>
             </div>
+            <p style="color:var(--grey-t);font-size:11.5px;margin:8px 0 0">Send the faculty/moderator link once by chat or email — one click opens the right view directly, no code needed.</p>
           </div>
         </div>
 
@@ -426,6 +440,7 @@ box-shadow:0 8px 30px rgba(15,30,40,.1)}
       </div>
 
       <div class="mod-panel" id="panel-cases">
+        <div id="facultyAllocationBlock"></div>
         <p style="color:var(--grey-t);font-size:13.5px;margin:0 0 16px">
           Tap any case to expand the full walkthrough: vignette, gas, interpretation, SID analysis, case-specific Q&amp;A, post-intervention gas, pitfalls, and take-home.
         </p>
@@ -963,12 +978,19 @@ function renderApp(){
   $("#chipGroup").textContent = "Group " + STATE.profile.group;
   renderSidebar();
   var mb = $("#menuBtn");
-  if (window.matchMedia("(max-width:900px)").matches) mb.style.display = "inline-flex";
+  if (window.matchMedia("(max-width:900px)").matches) mb.style.display = "flex";
   mb.onclick = function(){ $("#sidebar").classList.toggle("open"); };
   renderMain();
 }
 
 function renderSidebar(){
+  var unlockedCount = CASES.filter(function(c){ return isUnlocked(c.id); }).length;
+  var prog = $("#sbProgress");
+  if (prog){
+    prog.style.display = "flex";
+    $("#sbProgressTxt").textContent = unlockedCount + " of " + CASES.length + " unlocked";
+    $("#sbProgressBar").style.width = Math.round(unlockedCount / CASES.length * 100) + "%";
+  }
   var list = $("#caseList");
   list.innerHTML = CASES.map(function(c){
     var unlocked = isUnlocked(c.id);
@@ -1242,6 +1264,20 @@ function initModerator(mode){
     }
   });
 
+  function copyRoleLink(param, label){
+    var base = getParticipantUrl();
+    var url = base + (base.indexOf("?") >= 0 ? "&" : "?") + param;
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(url).then(function(){ toast(label + " link copied"); }, function(){ toast(url); });
+    } else {
+      toast(url);
+    }
+  }
+  var cfl = $("#copyFacultyLink");
+  if (cfl) cfl.addEventListener("click", function(){ copyRoleLink("faculty=1", "Faculty"); });
+  var cml = $("#copyModLink");
+  if (cml) cml.addEventListener("click", function(){ copyRoleLink("mod=1", "Moderator"); });
+
   // Refresh QR
   var refreshBtn = $("#refreshQR");
   if (refreshBtn){
@@ -1259,6 +1295,7 @@ function initModerator(mode){
   // Build QR and case walkthroughs
   buildQRCode();
   buildCaseWalkthroughs();
+  renderFacultyBlock();
 }
 
 
@@ -1295,6 +1332,40 @@ function setParticipantUrl(url){
   localStorage.setItem("abg:baseUrl", url);
   var el = document.getElementById("baseUrl");
   if (el) el.value = url;
+}
+
+
+/* ===== FACULTY ALLOCATION ===== */
+var FACULTY_ALLOCATION = [
+  {group:"1", name:"Manju",           caseNum:3, dx:"AGE (Gastroenteritis)"},
+  {group:"2", name:"Shilpa",          caseNum:6, dx:"Hanging (Post-arrest)"},
+  {group:"3", name:"Namitha",         caseNum:9, dx:"Encephalopathy (Two neonates)"},
+  {group:"4", name:"Sivamurukan",     caseNum:8, dx:"Methaemoglobinaemia"},
+  {group:"5", name:"Nikhil",          caseNum:5, dx:"Salicylate poisoning"},
+  {group:"6", name:"Rohit",           caseNum:7, dx:"Septic shock + severe anaemia"},
+  {group:"7", name:"Balachandar",     caseNum:4, dx:"Suspected IEM"},
+  {group:"8", name:"Dipu / Sreedeep", caseNum:2, dx:"Pyloric stenosis"}
+];
+
+function renderFacultyBlock(){
+  var host = document.getElementById("facultyAllocationBlock");
+  if (!host) return;
+  var html = '<div class="cheat-section" style="margin-bottom:24px">';
+  html += '<h3>Faculty allocation by group</h3>';
+  html += '<p style="color:var(--grey-t);font-size:12.5px;margin:0 0 10px"><b>Moderator:</b> Dr Narayanan and Dr Manju Kedarnath</p>';
+  html += '<table><thead><tr>'
+        + '<th style="width:12%">Group</th>'
+        + '<th style="width:26%">Faculty</th>'
+        + '<th style="width:14%">Case</th>'
+        + '<th>Diagnosis</th></tr></thead><tbody>';
+  FACULTY_ALLOCATION.forEach(function(f){
+    html += '<tr><td>Group ' + f.group + '</td>'
+          + '<td>' + f.name + '</td>'
+          + '<td><b>Case ' + f.caseNum + '</b></td>'
+          + '<td>' + f.dx + '</td></tr>';
+  });
+  html += '</tbody></table></div>';
+  host.innerHTML = html;
 }
 
 function buildQRCode(){
